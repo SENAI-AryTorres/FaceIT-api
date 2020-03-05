@@ -16,6 +16,7 @@ namespace faceitapi.Controllers
 
         public LoginController()
         {
+            //Teste só porque deu errado
             faceitContext = new faceitContext();
         }
 
