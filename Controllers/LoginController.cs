@@ -30,11 +30,11 @@ namespace faceitapi.Controllers
                 {
                     if (pessoa.Tipo.Equals("PF"))
                     {
-                        return Ok(await faceitContext.PessoaFisica.Include(x => x.IdpessoaNavigation).FirstOrDefaultAsync(x => x.Idpessoa == pessoa.Id));
+                        return Ok(await faceitContext.PessoaFisica.Include(x => x.IdpessoaNavigation).FirstOrDefaultAsync(x => x.Idpessoa == pessoa.Idpessoa));
                     }
                     else
                     {
-                        return Ok(await faceitContext.PessoaJuridica.Include(x => x.IdpessoaNavigation).FirstOrDefaultAsync(x => x.Idpessoa == pessoa.Id));
+                        return Ok(await faceitContext.PessoaJuridica.Include(x => x.IdpessoaNavigation).FirstOrDefaultAsync(x => x.Idpessoa == pessoa.Idpessoa));
                     }
                 }
                 catch (Exception ex)

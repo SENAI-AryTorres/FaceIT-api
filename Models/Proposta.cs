@@ -8,18 +8,18 @@ namespace faceitapi.Models
         public Proposta()
         {
             Candidato = new HashSet<Candidato>();
+            PropostaSkill = new HashSet<PropostaSkill>();
         }
 
-        public int Id { get; set; }
+        public int Idproposta { get; set; }
         public string Descricao { get; set; }
         public string TipoContrato { get; set; }
         public string Cidade { get; set; }
         public bool? Encerrada { get; set; }
-        public int? Idskill { get; set; }
         public string Latitude { get; set; }
         public string Longitude { get; set; }
 
-        public virtual Skill IdskillNavigation { get; set; }
         public virtual ICollection<Candidato> Candidato { get; set; }
+        public virtual ICollection<PropostaSkill> PropostaSkill { get; set; }
     }
 }
