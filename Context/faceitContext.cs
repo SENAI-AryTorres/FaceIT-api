@@ -322,7 +322,9 @@ namespace faceitapi.Context
             {
                 entity.HasKey(e => new { e.Idskill, e.IdtipoSkill });
 
-                entity.Property(e => e.Idskill).HasColumnName("IDSkill");
+                entity.Property(e => e.Idskill)
+                    .HasColumnName("IDSkill")
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.IdtipoSkill).HasColumnName("IDTipoSkill");
 
