@@ -22,7 +22,7 @@ namespace faceitapi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var data = await faceitContext.PessoaFisica.Include(x => x.IdpessoaNavigation).ToListAsync();
+            var data = await faceitContext.PessoaFisica.Include(x => x.IdpessoaNavigation).ThenInclude(x => x.Endereco).Include(X => X.IdpessoaNavigation.Imagem).ToListAsync();
             return Ok(data);
         }
 
@@ -30,7 +30,7 @@ namespace faceitapi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var data = await faceitContext.PessoaFisica.Include(x => x.IdpessoaNavigation).FirstOrDefaultAsync(x => x.Idpessoa == id);
+            var data = await faceitContext.PessoaFisica.Include(x => x.IdpessoaNavigation).ThenInclude(x => x.Endereco).Include(X => X.IdpessoaNavigation.Imagem).FirstOrDefaultAsync(x => x.Idpessoa == id);
             return Ok(data);
         }
 
@@ -43,6 +43,7 @@ namespace faceitapi.Controllers
                 {
                     model.IdpessoaNavigation.Excluido = false;
                     await faceitContext.Pessoa.AddAsync(model.IdpessoaNavigation);
+                    await faceitContext.Endereco.AddAsync(model.IdpessoaNavigation.Endereco);
                     await faceitContext.PessoaFisica.AddAsync(model);
                     await faceitContext.SaveChangesAsync();
 
