@@ -3,7 +3,6 @@ using faceitapi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace faceitapi.Controllers
@@ -22,7 +21,10 @@ namespace faceitapi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var data = await faceitContext.PessoaFisica.Include(x => x.IdpessoaNavigation).ThenInclude(x => x.Endereco).Include(X => X.IdpessoaNavigation.Imagem).ToListAsync();
+            var data = await faceitContext.PessoaFisica
+                .Include(x => x.IdpessoaNavigation)
+                .ToListAsync();
+
             return Ok(data);
         }
 
@@ -30,7 +32,10 @@ namespace faceitapi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var data = await faceitContext.PessoaFisica.Include(x => x.IdpessoaNavigation).ThenInclude(x => x.Endereco).Include(X => X.IdpessoaNavigation.Imagem).FirstOrDefaultAsync(x => x.Idpessoa == id);
+            var data = await faceitContext.PessoaFisica
+                .Include(x => x.IdpessoaNavigation)
+                .FirstOrDefaultAsync(x => x.Idpessoa == id);
+
             return Ok(data);
         }
 

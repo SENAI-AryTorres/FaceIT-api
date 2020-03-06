@@ -1,12 +1,11 @@
-﻿using System;
+﻿using faceitapi.Context;
+using faceitapi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using faceitapi.Context;
-using faceitapi.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace faceitapi.Controllers
 {
