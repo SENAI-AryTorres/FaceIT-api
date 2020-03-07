@@ -1,5 +1,6 @@
 ﻿using faceitapi.Context;
 using faceitapi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,6 +19,7 @@ namespace faceitapi.Controllers
             faceitContext = new faceitContext();
         }
 
+        //Esse metodo será removido para produção
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -30,16 +32,58 @@ namespace faceitapi.Controllers
 
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
-            var data = await faceitContext.PessoaFisica
+            try
+            {
+                var data = await faceitContext.PessoaFisica
                 .Include(x => x.IdpessoaNavigation)
                 .FirstOrDefaultAsync(x => x.Idpessoa == id);
 
-            return Ok(data);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        [HttpPost]
+        [HttpPost("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> EditOrDelete([FromBody] PessoaFisica model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    faceitContext.Pessoa.Update(model.IdpessoaNavigation);
+                    faceitContext.PessoaFisica.Update(model);
+                    await faceitContext.SaveChangesAsync();
+                    return Ok(GetById(model.Idpessoa));
+                }
+                catch (Exception)
+                {
+
+                    return BadRequest(ModelState);
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        /// <summary>
+        /// Metodo serve tanto para atualizar como para apagar, já que o registro não será apagado fisicamente.
+        /// </summary>
+        /// <param name="model">Objeto modificado</param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Insert([FromBody] PessoaFisica model)
         {
             if (ModelState.IsValid)
@@ -57,36 +101,6 @@ namespace faceitapi.Controllers
                 catch (Exception ex)
                 {
                     return BadRequest(ex);
-                }
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-
-        }
-
-        /// <summary>
-        /// Metodo serve tanto para atualizar como para apagar, já que o registro não será apagado fisicamente.
-        /// </summary>
-        /// <param name="model">Objeto modificado</param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditOrDelete([FromBody] PessoaFisica model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    faceitContext.Pessoa.Update(model.IdpessoaNavigation);
-                    faceitContext.PessoaFisica.Update(model);
-                    await faceitContext.SaveChangesAsync();
-                    return Ok(GetById(model.Idpessoa));
-                }
-                catch (Exception)
-                {
-
-                    return BadRequest(ModelState);
                 }
             }
             else

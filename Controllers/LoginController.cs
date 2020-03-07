@@ -1,5 +1,6 @@
 ﻿using faceitapi.Context;
 using faceitapi.Models.ViewModel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,11 +16,13 @@ namespace faceitapi.Controllers
 
         public LoginController()
         {
-            //Teste só porque deu errado
             faceitContext = new faceitContext();
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Login([FromBody] LoginGet loginGet)
         {
             var pessoa = await faceitContext.Pessoa

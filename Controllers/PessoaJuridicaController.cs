@@ -1,5 +1,6 @@
 ﻿using faceitapi.Context;
 using faceitapi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,14 +19,22 @@ namespace faceitapi.Controllers
             faceitContext = new faceitContext();
         }
 
+        //Metodo vai ver removido para produção
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var data = await faceitContext.PessoaJuridica
-                .Include(x => x.IdpessoaNavigation)
-                .ToListAsync();
+            try
+            {
+                var data = await faceitContext.PessoaJuridica
+                    .Include(x => x.IdpessoaNavigation)
+                    .ToListAsync();
 
-            return Ok(data);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
 
@@ -39,7 +48,9 @@ namespace faceitapi.Controllers
             return Ok(data);
         }
 
-        [HttpPost]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Insert([FromBody] PessoaJuridica model)
         {
             if (ModelState.IsValid)
@@ -71,7 +82,9 @@ namespace faceitapi.Controllers
         /// </summary>
         /// <param name="model">Objeto modificado</param>
         /// <returns></returns>
-        [HttpPut("{id}")]
+        [HttpPost("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> EditOrDelete([FromBody] PessoaJuridica model)
         {
             if (ModelState.IsValid)

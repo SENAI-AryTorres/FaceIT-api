@@ -1,5 +1,6 @@
 ﻿using faceitapi.Context;
 using faceitapi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,6 +22,9 @@ namespace faceitapi.Controllers
         }
 
         [HttpGet("{idPessoa}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetSkillsPessoa(int idPessoa)
         {
             try
@@ -45,7 +49,9 @@ namespace faceitapi.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Insert([FromBody] List<PessoaSkill> skills)
         {
             try
@@ -61,6 +67,8 @@ namespace faceitapi.Controllers
         }
 
         [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteSkillPessoa([FromBody] List<PessoaSkill> skills)
         {
             try
