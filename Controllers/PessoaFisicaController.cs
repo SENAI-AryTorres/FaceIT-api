@@ -26,7 +26,9 @@ namespace faceitapi.Controllers
         {
             var data = await faceitContext.PessoaFisica
                 .Include(x => x.IdpessoaNavigation)
-                .ThenInclude(x => x.Endereco)
+                .Include(x => x.IdpessoaNavigation.Anexo)
+                .Include(x => x.IdpessoaNavigation.Imagem)
+                .Include(x => x.IdpessoaNavigation.Endereco)
                 .Where(x => x.IdpessoaNavigation.Excluido == false)
                 .ToListAsync();
 
@@ -43,6 +45,10 @@ namespace faceitapi.Controllers
             {
                 var data = await faceitContext.PessoaFisica
                 .Include(x => x.IdpessoaNavigation)
+                .Include(x => x.IdpessoaNavigation.PessoaSkill)
+                .Include(x => x.IdpessoaNavigation.Endereco)
+                .Include(x => x.IdpessoaNavigation.Anexo)
+                .Include(x => x.IdpessoaNavigation.Imagem)
                 .FirstOrDefaultAsync(x => x.Idpessoa == id);
 
                 if (data.IdpessoaNavigation.Excluido == false)
@@ -71,13 +77,19 @@ namespace faceitapi.Controllers
                 {
                     faceitContext.Pessoa.Update(model.IdpessoaNavigation);
                     faceitContext.PessoaFisica.Update(model);
+                    faceitContext.Endereco.Update(model.IdpessoaNavigation.Endereco);
+                    faceitContext.PessoaSkill.UpdateRange(model.IdpessoaNavigation.PessoaSkill);
+                    faceitContext.Imagem.Update(model.IdpessoaNavigation.Imagem);
+                    faceitContext.Anexo.Update(model.IdpessoaNavigation.Anexo);
+
                     await faceitContext.SaveChangesAsync();
+
                     return Ok(GetById(model.Idpessoa));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
 
-                    return BadRequest(ModelState);
+                    return BadRequest(ex);
                 }
             }
             else
@@ -103,8 +115,12 @@ namespace faceitapi.Controllers
                     model.IdpessoaNavigation.Excluido = false;
                     model.IdpessoaNavigation.Tipo = "PF";
                     await faceitContext.Pessoa.AddAsync(model.IdpessoaNavigation);
-                    await faceitContext.Endereco.AddAsync(model.IdpessoaNavigation.Endereco);
                     await faceitContext.PessoaFisica.AddAsync(model);
+                    await faceitContext.Endereco.AddAsync(model.IdpessoaNavigation.Endereco);
+                    await faceitContext.PessoaSkill.AddRangeAsync(model.IdpessoaNavigation.PessoaSkill);
+                    await faceitContext.Imagem.AddAsync(model.IdpessoaNavigation.Imagem);
+                    await faceitContext.Anexo.AddAsync(model.IdpessoaNavigation.Anexo);
+
                     await faceitContext.SaveChangesAsync();
 
                     return Ok(GetById(model.Idpessoa));

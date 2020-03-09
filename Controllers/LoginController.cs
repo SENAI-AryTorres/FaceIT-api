@@ -37,6 +37,10 @@ namespace faceitapi.Controllers
                         return Ok(
                             await faceitContext.PessoaFisica
                             .Include(x => x.IdpessoaNavigation)
+                            .Include(x => x.IdpessoaNavigation.Endereco)
+                            .Include(x => x.IdpessoaNavigation.PessoaSkill)
+                            .Include(x => x.IdpessoaNavigation.Anexo)
+                            .Include(x => x.IdpessoaNavigation.Imagem)
                             .FirstOrDefaultAsync(x => x.Idpessoa == pessoa.Idpessoa)
                             );
                     }
@@ -45,6 +49,10 @@ namespace faceitapi.Controllers
                         return Ok(
                             await faceitContext.PessoaJuridica
                             .Include(x => x.IdpessoaNavigation)
+                            .Include(x => x.IdpessoaNavigation.Endereco)
+                            .Include(x => x.IdpessoaNavigation.PessoaSkill)
+                            .Include(x => x.IdpessoaNavigation.Anexo)
+                            .Include(x => x.IdpessoaNavigation.Imagem)
                             .FirstOrDefaultAsync(x => x.Idpessoa == pessoa.Idpessoa)
                             );
                     }
