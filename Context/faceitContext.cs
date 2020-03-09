@@ -34,7 +34,7 @@ namespace faceitapi.Context
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=face-it.mssql.somee.com;Database=face-it;user=DonSantos_SQLLogin_1;password=zuradk54yr;");
+                optionsBuilder.UseSqlServer("Server=face-it.mssql.somee.com ;Database=face-it;user=DonSantos_SQLLogin_1;password=zuradk54yr;");
             }
         }
 
@@ -48,10 +48,7 @@ namespace faceitapi.Context
                     .HasColumnName("IDPessoa")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Bytes)
-                    .IsRequired()
-                    .HasMaxLength(500)
-                    .IsFixedLength();
+                entity.Property(e => e.Bytes).IsRequired();
 
                 entity.Property(e => e.Nome)
                     .HasMaxLength(150)
@@ -142,10 +139,7 @@ namespace faceitapi.Context
                     .HasColumnName("IDPessoa")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Bytes)
-                    .IsRequired()
-                    .HasMaxLength(500)
-                    .IsFixedLength();
+                entity.Property(e => e.Bytes).IsRequired();
 
                 entity.Property(e => e.Nome)
                     .HasMaxLength(150)
