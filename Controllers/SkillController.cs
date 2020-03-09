@@ -25,7 +25,7 @@ namespace faceitapi.Controllers
         {
             try
             {
-                var data = await faceitContext.Skill
+                System.Collections.Generic.List<Models.Skill> data = await faceitContext.Skill
                 .ToListAsync();
 
                 return Ok(data);

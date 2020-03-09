@@ -25,7 +25,7 @@ namespace faceitapi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Login([FromBody] LoginGet loginGet)
         {
-            var pessoa = await faceitContext.Pessoa
+            Models.Pessoa pessoa = await faceitContext.Pessoa
                 .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleId == loginGet.GoogleId));
 
             if (pessoa != null && pessoa.Excluido != true)

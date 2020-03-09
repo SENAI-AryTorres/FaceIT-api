@@ -12,26 +12,25 @@ namespace faceitapi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PessoaSkillController : ControllerBase
+    public class CandidatoController : ControllerBase
     {
         private readonly faceitContext faceitContext;
 
-        public PessoaSkillController()
+        public CandidatoController()
         {
             faceitContext = new faceitContext();
         }
 
-        [HttpGet("{idPessoa}")]
+        [HttpGet("{idProposta}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetSkillsPessoa(int idPessoa)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetAll(int idProposta)
         {
             try
             {
-                List<PessoaSkill> data = await faceitContext.PessoaSkill
-                    .Where(x => x.Idpessoa == idPessoa)
-                    .Include(x => x.Id)
+                List<Candidato> data = await faceitContext.Candidato
+                    .Where(x => x.Idproposta == idProposta)
                     .ToListAsync();
 
                 if (data.Count > 0)
@@ -52,13 +51,14 @@ namespace faceitapi.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Insert([FromBody] List<PessoaSkill> skills)
+        public async Task<IActionResult> Insert([FromBody] Candidato candidato)
         {
             try
             {
-                await faceitContext.PessoaSkill.AddRangeAsync(skills);
+                await faceitContext.Candidato.AddAsync(candidato);
                 await faceitContext.SaveChangesAsync();
-                return Ok(skills);
+
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -69,13 +69,14 @@ namespace faceitapi.Controllers
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> DeleteSkillPessoa([FromBody] List<PessoaSkill> skills)
+        public async Task<IActionResult> Delete([FromBody] Candidato candidato)
         {
             try
             {
-                faceitContext.PessoaSkill.RemoveRange(skills);
+                faceitContext.Candidato.Remove(candidato);
                 await faceitContext.SaveChangesAsync();
-                return Ok(skills);
+
+                return Ok();
             }
             catch (Exception ex)
             {
