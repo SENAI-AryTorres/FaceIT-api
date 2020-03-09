@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace faceitapi.Controllers
@@ -25,8 +26,10 @@ namespace faceitapi.Controllers
         {
             var data = await faceitContext.PessoaFisica
                 .Include(x => x.IdpessoaNavigation)
+                .ThenInclude(x => x.Endereco)
+                .Where(x => x.IdpessoaNavigation.Excluido == false)
                 .ToListAsync();
-
+                
             return Ok(data);
         }
 
@@ -42,7 +45,14 @@ namespace faceitapi.Controllers
                 .Include(x => x.IdpessoaNavigation)
                 .FirstOrDefaultAsync(x => x.Idpessoa == id);
 
-                return Ok(data);
+                if (data.IdpessoaNavigation.Excluido == false)
+                {
+                    return Ok(data);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
             catch (Exception ex)
             {
@@ -50,7 +60,7 @@ namespace faceitapi.Controllers
             }
         }
 
-        [HttpPost("{id}")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> EditOrDelete([FromBody] PessoaFisica model)
@@ -91,6 +101,7 @@ namespace faceitapi.Controllers
                 try
                 {
                     model.IdpessoaNavigation.Excluido = false;
+                    model.IdpessoaNavigation.Tipo = "PF";
                     await faceitContext.Pessoa.AddAsync(model.IdpessoaNavigation);
                     await faceitContext.Endereco.AddAsync(model.IdpessoaNavigation.Endereco);
                     await faceitContext.PessoaFisica.AddAsync(model);

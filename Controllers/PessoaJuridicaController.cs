@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace faceitapi.Controllers
@@ -27,6 +28,8 @@ namespace faceitapi.Controllers
             {
                 var data = await faceitContext.PessoaJuridica
                     .Include(x => x.IdpessoaNavigation)
+                    .ThenInclude(x => x.Endereco)
+                    .Where(x => x.IdpessoaNavigation.Excluido == false)
                     .ToListAsync();
 
                 return Ok(data);
@@ -41,11 +44,26 @@ namespace faceitapi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var data = await faceitContext.PessoaJuridica
-                .Include(x => x.IdpessoaNavigation)
-                .FirstOrDefaultAsync(x => x.Idpessoa == id);
+            try
+            {
+                var data = await faceitContext.PessoaJuridica
+                    .Include(x => x.IdpessoaNavigation)
+                    .Where(x => x.IdpessoaNavigation.Excluido == false)
+                    .FirstOrDefaultAsync(x => x.Idpessoa == id);
 
-            return Ok(data);
+                if (data != null)
+                {
+                    return Ok(data);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         [HttpPut]
@@ -58,6 +76,7 @@ namespace faceitapi.Controllers
                 try
                 {
                     model.IdpessoaNavigation.Excluido = false;
+                    model.IdpessoaNavigation.Tipo = "PJ";
                     await faceitContext.Pessoa.AddAsync(model.IdpessoaNavigation);
                     await faceitContext.Endereco.AddAsync(model.IdpessoaNavigation.Endereco);
                     await faceitContext.PessoaJuridica.AddAsync(model);
@@ -82,7 +101,7 @@ namespace faceitapi.Controllers
         /// </summary>
         /// <param name="model">Objeto modificado</param>
         /// <returns></returns>
-        [HttpPost("{id}")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> EditOrDelete([FromBody] PessoaJuridica model)

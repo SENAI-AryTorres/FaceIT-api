@@ -40,7 +40,7 @@ namespace faceitapi.Controllers
                 }
                 else
                 {
-                    return new NotFoundResult();
+                    return NotFound();
                 }
             }
             catch (Exception ex)
@@ -58,7 +58,7 @@ namespace faceitapi.Controllers
             {
                 await faceitContext.PessoaSkill.AddRangeAsync(skills);
                 await faceitContext.SaveChangesAsync();
-                return Ok();
+                return Ok(skills);
             }
             catch (Exception ex)
             {
@@ -75,7 +75,7 @@ namespace faceitapi.Controllers
             {
                 faceitContext.PessoaSkill.RemoveRange(skills);
                 await faceitContext.SaveChangesAsync();
-                return Ok();
+                return Ok(skills);
             }
             catch (Exception ex)
             {
