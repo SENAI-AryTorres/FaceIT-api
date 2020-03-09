@@ -56,7 +56,7 @@ namespace faceitapi.Controllers
             }
             else
             {
-                return new NotFoundResult();
+                return NotFound();
             }
         }
     }
