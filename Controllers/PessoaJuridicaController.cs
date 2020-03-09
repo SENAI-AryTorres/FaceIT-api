@@ -28,7 +28,9 @@ namespace faceitapi.Controllers
             {
                 var data = await faceitContext.PessoaJuridica
                     .Include(x => x.IdpessoaNavigation)
-                    .ThenInclude(x => x.Endereco)
+                    .Include(x => x.IdpessoaNavigation.Anexo)
+                    .Include(x => x.IdpessoaNavigation.Imagem)
+                    .Include(x => x.IdpessoaNavigation.Endereco)
                     .Where(x => x.IdpessoaNavigation.Excluido == false)
                     .ToListAsync();
 
@@ -48,6 +50,9 @@ namespace faceitapi.Controllers
             {
                 var data = await faceitContext.PessoaJuridica
                     .Include(x => x.IdpessoaNavigation)
+                    .Include(x => x.IdpessoaNavigation.Endereco)
+                    .Include(x => x.IdpessoaNavigation.Anexo)
+                    .Include(x => x.IdpessoaNavigation.Imagem)
                     .Where(x => x.IdpessoaNavigation.Excluido == false)
                     .FirstOrDefaultAsync(x => x.Idpessoa == id);
 
@@ -78,8 +83,12 @@ namespace faceitapi.Controllers
                     model.IdpessoaNavigation.Excluido = false;
                     model.IdpessoaNavigation.Tipo = "PJ";
                     await faceitContext.Pessoa.AddAsync(model.IdpessoaNavigation);
-                    await faceitContext.Endereco.AddAsync(model.IdpessoaNavigation.Endereco);
                     await faceitContext.PessoaJuridica.AddAsync(model);
+                    await faceitContext.Endereco.AddAsync(model.IdpessoaNavigation.Endereco);
+                    await faceitContext.PessoaSkill.AddRangeAsync(model.IdpessoaNavigation.PessoaSkill);
+                    await faceitContext.Imagem.AddAsync(model.IdpessoaNavigation.Imagem);
+                    await faceitContext.Anexo.AddAsync(model.IdpessoaNavigation.Anexo);
+
                     await faceitContext.SaveChangesAsync();
 
                     return Ok(GetById(model.Idpessoa));
@@ -112,7 +121,13 @@ namespace faceitapi.Controllers
                 {
                     faceitContext.Pessoa.Update(model.IdpessoaNavigation);
                     faceitContext.PessoaJuridica.Update(model);
+                    faceitContext.Endereco.Update(model.IdpessoaNavigation.Endereco);
+                    faceitContext.PessoaSkill.UpdateRange(model.IdpessoaNavigation.PessoaSkill);
+                    faceitContext.Imagem.Update(model.IdpessoaNavigation.Imagem);
+                    faceitContext.Anexo.Update(model.IdpessoaNavigation.Anexo);
+
                     await faceitContext.SaveChangesAsync();
+
                     return Ok(GetById(model.Idpessoa));
                 }
                 catch (Exception)
