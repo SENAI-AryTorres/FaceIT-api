@@ -29,7 +29,7 @@ namespace faceitapi.Controllers
         {
             try
             {
-                List<PessoaSkill> data = await faceitContext.PessoaSkill
+                var data = await faceitContext.PessoaSkill
                     .Where(x => x.Idpessoa == idPessoa)
                     .Include(x => x.Id)
                     .ToListAsync();

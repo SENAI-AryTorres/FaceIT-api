@@ -29,7 +29,7 @@ namespace faceitapi.Controllers
         {
             try
             {
-                List<Candidato> data = await faceitContext.Candidato
+                var data = await faceitContext.Candidato
                     .Where(x => x.Idproposta == idProposta)
                     .ToListAsync();
 

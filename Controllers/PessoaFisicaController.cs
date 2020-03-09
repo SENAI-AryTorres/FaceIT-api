@@ -24,7 +24,7 @@ namespace faceitapi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            System.Collections.Generic.List<PessoaFisica> data = await faceitContext.PessoaFisica
+            var data = await faceitContext.PessoaFisica
                 .Include(x => x.IdpessoaNavigation)
                 .ThenInclude(x => x.Endereco)
                 .Where(x => x.IdpessoaNavigation.Excluido == false)
@@ -41,7 +41,7 @@ namespace faceitapi.Controllers
         {
             try
             {
-                PessoaFisica data = await faceitContext.PessoaFisica
+                var data = await faceitContext.PessoaFisica
                 .Include(x => x.IdpessoaNavigation)
                 .FirstOrDefaultAsync(x => x.Idpessoa == id);
 

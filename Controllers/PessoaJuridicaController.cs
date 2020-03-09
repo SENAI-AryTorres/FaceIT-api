@@ -26,7 +26,7 @@ namespace faceitapi.Controllers
         {
             try
             {
-                System.Collections.Generic.List<PessoaJuridica> data = await faceitContext.PessoaJuridica
+                var data = await faceitContext.PessoaJuridica
                     .Include(x => x.IdpessoaNavigation)
                     .ThenInclude(x => x.Endereco)
                     .Where(x => x.IdpessoaNavigation.Excluido == false)
@@ -46,7 +46,7 @@ namespace faceitapi.Controllers
         {
             try
             {
-                PessoaJuridica data = await faceitContext.PessoaJuridica
+                var data = await faceitContext.PessoaJuridica
                     .Include(x => x.IdpessoaNavigation)
                     .Where(x => x.IdpessoaNavigation.Excluido == false)
                     .FirstOrDefaultAsync(x => x.Idpessoa == id);
