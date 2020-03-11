@@ -22,7 +22,7 @@ namespace faceitapi.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -37,27 +37,35 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Insert([FromBody] Proposta proposta)
         {
-            try
+            if (ModelState.IsValid)
             {
-                proposta.Encerrada = false;
-                await faceitContext.Proposta.AddAsync(proposta);
-                await faceitContext.PropostaSkill.AddRangeAsync(proposta.PropostaSkill);
-                await faceitContext.SaveChangesAsync();
+                try
+                {
+                    proposta.Encerrada = false;
+                    await faceitContext.Proposta.AddAsync(proposta);
+                    await faceitContext.PropostaSkill.AddRangeAsync(proposta.PropostaSkill);
+                    await faceitContext.SaveChangesAsync();
 
-                return Ok(proposta);
+                    return StatusCode(StatusCodes.Status201Created, proposta);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex);
+                return BadRequest(ModelState);
             }
         }
 
@@ -66,22 +74,30 @@ namespace faceitapi.Controllers
         /// </summary>
         /// <param name="proposta"></param>
         /// <returns></returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditOrDelete([FromBody] Proposta proposta)
         {
-            try
+            if (ModelState.IsValid)
             {
-                faceitContext.Proposta.Update(proposta);
-                faceitContext.PropostaSkill.UpdateRange(proposta.PropostaSkill);
-                await faceitContext.SaveChangesAsync();
+                try
+                {
+                    faceitContext.Proposta.Update(proposta);
+                    faceitContext.PropostaSkill.UpdateRange(proposta.PropostaSkill);
+                    await faceitContext.SaveChangesAsync();
 
-                return Ok(proposta);
+                    return Accepted(proposta);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex);
+                return BadRequest(ModelState);
             }
         }
 

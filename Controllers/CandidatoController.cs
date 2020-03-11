@@ -44,12 +44,12 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Insert([FromBody] Candidato candidato)
         {
@@ -58,11 +58,11 @@ namespace faceitapi.Controllers
                 await faceitContext.Candidato.AddAsync(candidato);
                 await faceitContext.SaveChangesAsync();
 
-                return Ok();
+                return Created("api/Candidato", new { candidato.Idproposta });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -76,11 +76,11 @@ namespace faceitapi.Controllers
                 faceitContext.Candidato.Remove(candidato);
                 await faceitContext.SaveChangesAsync();
 
-                return Ok();
+                return Accepted();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }
