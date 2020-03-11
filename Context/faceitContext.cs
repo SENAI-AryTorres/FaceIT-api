@@ -156,6 +156,10 @@ namespace faceitapi.Context
             {
                 entity.HasKey(e => e.Idpessoa);
 
+                entity.HasIndex(e => e.Email)
+                    .HasName("IX_Pessoa")
+                    .IsUnique();
+
                 entity.Property(e => e.Idpessoa).HasColumnName("IDPessoa");
 
                 entity.Property(e => e.Email)
@@ -176,6 +180,10 @@ namespace faceitapi.Context
             modelBuilder.Entity<PessoaFisica>(entity =>
             {
                 entity.HasKey(e => e.Idpessoa);
+
+                entity.HasIndex(e => e.Cpf)
+                    .HasName("IX_PessoaFisica")
+                    .IsUnique();
 
                 entity.Property(e => e.Idpessoa)
                     .HasColumnName("IDPessoa")
@@ -206,6 +214,10 @@ namespace faceitapi.Context
             modelBuilder.Entity<PessoaJuridica>(entity =>
             {
                 entity.HasKey(e => e.Idpessoa);
+
+                entity.HasIndex(e => e.Cnpj)
+                    .HasName("IX_PessoaJuridica")
+                    .IsUnique();
 
                 entity.Property(e => e.Idpessoa)
                     .HasColumnName("IDPessoa")
@@ -276,6 +288,8 @@ namespace faceitapi.Context
                     .HasMaxLength(250)
                     .IsUnicode(false);
 
+                entity.Property(e => e.Idempresa).HasColumnName("IDEmpresa");
+
                 entity.Property(e => e.Latitude)
                     .HasMaxLength(150)
                     .IsUnicode(false);
@@ -287,6 +301,12 @@ namespace faceitapi.Context
                 entity.Property(e => e.TipoContrato)
                     .HasMaxLength(2)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.IdempresaNavigation)
+                    .WithMany(p => p.Proposta)
+                    .HasForeignKey(d => d.Idempresa)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Proposta_Pessoa1");
             });
 
             modelBuilder.Entity<PropostaSkill>(entity =>
