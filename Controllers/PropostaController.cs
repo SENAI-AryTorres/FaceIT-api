@@ -42,6 +42,28 @@ namespace faceitapi.Controllers
             }
         }
 
+        [HttpGet("{idPropsota}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetById(int idProposta)
+        {
+            try
+            {
+                var data = await faceitContext
+                    .Proposta
+                    .Include(x => x.PropostaSkill)
+                    .Where(x => x.Encerrada == false && x.Idproposta == idProposta)
+                    .ToListAsync();
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
