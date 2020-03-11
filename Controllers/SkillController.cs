@@ -32,7 +32,7 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }

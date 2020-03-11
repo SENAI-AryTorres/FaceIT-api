@@ -45,12 +45,12 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Insert([FromBody] List<PessoaSkill> skills)
         {
@@ -58,11 +58,12 @@ namespace faceitapi.Controllers
             {
                 await faceitContext.PessoaSkill.AddRangeAsync(skills);
                 await faceitContext.SaveChangesAsync();
-                return Ok(skills);
+
+                return StatusCode(StatusCodes.Status201Created, skills);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -75,11 +76,11 @@ namespace faceitapi.Controllers
             {
                 faceitContext.PessoaSkill.RemoveRange(skills);
                 await faceitContext.SaveChangesAsync();
-                return Ok(skills);
+                return Accepted(skills);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }

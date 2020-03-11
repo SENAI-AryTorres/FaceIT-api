@@ -22,6 +22,8 @@ namespace faceitapi.Controllers
 
         //Esse metodo será removido para produção
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
         {
             var data = await faceitContext.PessoaFisica
@@ -38,6 +40,7 @@ namespace faceitapi.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
@@ -69,6 +72,7 @@ namespace faceitapi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditOrDelete([FromBody] PessoaFisica model)
         {
             if (ModelState.IsValid)
@@ -84,12 +88,11 @@ namespace faceitapi.Controllers
 
                     await faceitContext.SaveChangesAsync();
 
-                    return Ok(GetById(model.Idpessoa));
+                    return Created("/api/PessoaFisica", new { model.Idpessoa });
                 }
                 catch (Exception ex)
                 {
-
-                    return BadRequest(ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
                 }
             }
             else
@@ -106,6 +109,7 @@ namespace faceitapi.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Insert([FromBody] PessoaFisica model)
         {
             if (ModelState.IsValid)
@@ -123,11 +127,11 @@ namespace faceitapi.Controllers
 
                     await faceitContext.SaveChangesAsync();
 
-                    return Ok(GetById(model.Idpessoa));
+                    return Accepted(model);
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
                 }
             }
             else

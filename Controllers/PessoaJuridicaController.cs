@@ -22,6 +22,8 @@ namespace faceitapi.Controllers
 
         //Metodo vai ver removido para produção
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -38,12 +40,15 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
 
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -67,13 +72,14 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Insert([FromBody] PessoaJuridica model)
         {
             if (ModelState.IsValid)
@@ -91,11 +97,11 @@ namespace faceitapi.Controllers
 
                     await faceitContext.SaveChangesAsync();
 
-                    return Ok(GetById(model.Idpessoa));
+                    return Created("/api/PessoaJuridica", new { model.Idpessoa });
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest(ex);
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
                 }
             }
             else
@@ -110,9 +116,10 @@ namespace faceitapi.Controllers
         /// </summary>
         /// <param name="model">Objeto modificado</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditOrDelete([FromBody] PessoaJuridica model)
         {
             if (ModelState.IsValid)
@@ -128,12 +135,11 @@ namespace faceitapi.Controllers
 
                     await faceitContext.SaveChangesAsync();
 
-                    return Ok(GetById(model.Idpessoa));
+                    return Accepted(model);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-
-                    return BadRequest(ModelState);
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
                 }
             }
             else
