@@ -9,6 +9,7 @@ namespace faceitapi.Models
         {
             Candidato = new HashSet<Candidato>();
             PessoaSkill = new HashSet<PessoaSkill>();
+            Proposta = new HashSet<Proposta>();
         }
 
         public int Idpessoa { get; set; }
@@ -25,5 +26,6 @@ namespace faceitapi.Models
         public virtual PessoaJuridica PessoaJuridica { get; set; }
         public virtual ICollection<Candidato> Candidato { get; set; }
         public virtual ICollection<PessoaSkill> PessoaSkill { get; set; }
+        public virtual ICollection<Proposta> Proposta { get; set; }
     }
 }

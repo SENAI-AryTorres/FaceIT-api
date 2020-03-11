@@ -12,6 +12,7 @@ namespace faceitapi.Models
         }
 
         public int Idproposta { get; set; }
+        public int Idempresa { get; set; }
         public string Descricao { get; set; }
         public string TipoContrato { get; set; }
         public string Cidade { get; set; }
@@ -19,6 +20,7 @@ namespace faceitapi.Models
         public string Latitude { get; set; }
         public string Longitude { get; set; }
 
+        public virtual Pessoa IdempresaNavigation { get; set; }
         public virtual ICollection<Candidato> Candidato { get; set; }
         public virtual ICollection<PropostaSkill> PropostaSkill { get; set; }
     }
