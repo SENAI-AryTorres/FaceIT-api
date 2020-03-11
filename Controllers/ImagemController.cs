@@ -24,7 +24,7 @@ namespace faceitapi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -43,13 +43,14 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Insert([FromBody] Imagem imagem)
         {
             try
@@ -61,7 +62,8 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
     }

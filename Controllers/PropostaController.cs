@@ -22,7 +22,7 @@ namespace faceitapi.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -37,13 +37,13 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Insert([FromBody] Proposta proposta)
         {
@@ -56,11 +56,12 @@ namespace faceitapi.Controllers
                     await faceitContext.PropostaSkill.AddRangeAsync(proposta.PropostaSkill);
                     await faceitContext.SaveChangesAsync();
 
-                    return StatusCode(StatusCodes.Status201Created, proposta);
+                    return Created("/api/PessoaJuridica", proposta );
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    ModelState.AddModelError(ex.Message, "Contate um administrador");
+                    return BadRequest(ModelState);
                 }
             }
             else
@@ -76,7 +77,6 @@ namespace faceitapi.Controllers
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> EditOrDelete([FromBody] Proposta proposta)
         {
@@ -92,7 +92,8 @@ namespace faceitapi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    ModelState.AddModelError(ex.Message, "Contate um administrador");
+                    return BadRequest(ModelState);
                 }
             }
             else

@@ -21,7 +21,7 @@ namespace faceitapi.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Login([FromBody] LoginGet loginGet)
         {
@@ -59,7 +59,8 @@ namespace faceitapi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    ModelState.AddModelError(ex.Message, "Contate um administrador");
+                    return BadRequest(ModelState);
                 }
             }
             else
