@@ -41,7 +41,7 @@ namespace faceitapi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -65,50 +65,13 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> EditOrDelete([FromBody] PessoaFisica model)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    faceitContext.Pessoa.Update(model.IdpessoaNavigation);
-                    faceitContext.PessoaFisica.Update(model);
-                    faceitContext.Endereco.Update(model.IdpessoaNavigation.Endereco);
-                    faceitContext.PessoaSkill.UpdateRange(model.IdpessoaNavigation.PessoaSkill);
-                    faceitContext.Imagem.Update(model.IdpessoaNavigation.Imagem);
-                    faceitContext.Anexo.Update(model.IdpessoaNavigation.Anexo);
-
-                    await faceitContext.SaveChangesAsync();
-
-                    return Created("/api/PessoaFisica", new { model.Idpessoa });
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
-                }
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
-
-        /// <summary>
-        /// Metodo serve tanto para atualizar como para apagar, já que o registro não será apagado fisicamente.
-        /// </summary>
-        /// <param name="model">Objeto modificado</param>
-        /// <returns></returns>
-        [HttpPut]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Insert([FromBody] PessoaFisica model)
         {
@@ -127,11 +90,49 @@ namespace faceitapi.Controllers
 
                     await faceitContext.SaveChangesAsync();
 
+                    return Created("/api/PessoaFisica", model );
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(ex.Message, "Contate um administrador");
+                    return BadRequest(ModelState);
+                }
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+
+        /// <summary>
+        /// Metodo serve tanto para atualizar como para apagar, já que o registro não será apagado fisicamente.
+        /// </summary>
+        /// <param name="model">Objeto modificado</param>
+        /// <returns></returns>
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> EditOrDelete([FromBody] PessoaFisica model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    faceitContext.Pessoa.Update(model.IdpessoaNavigation);
+                    faceitContext.PessoaFisica.Update(model);
+                    faceitContext.Endereco.Update(model.IdpessoaNavigation.Endereco);
+                    faceitContext.PessoaSkill.UpdateRange(model.IdpessoaNavigation.PessoaSkill);
+                    faceitContext.Imagem.Update(model.IdpessoaNavigation.Imagem);
+                    faceitContext.Anexo.Update(model.IdpessoaNavigation.Anexo);
+
+                    await faceitContext.SaveChangesAsync();
+
                     return Accepted(model);
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    ModelState.AddModelError(ex.Message, "Contate um administrador");
+                    return BadRequest(ModelState);
                 }
             }
             else

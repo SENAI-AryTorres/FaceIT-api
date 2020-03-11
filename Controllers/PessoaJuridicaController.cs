@@ -23,7 +23,7 @@ namespace faceitapi.Controllers
         //Metodo vai ver removido para produção
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -40,7 +40,8 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
 
@@ -48,7 +49,7 @@ namespace faceitapi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -72,7 +73,8 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
 
@@ -97,11 +99,12 @@ namespace faceitapi.Controllers
 
                     await faceitContext.SaveChangesAsync();
 
-                    return Created("/api/PessoaJuridica", new { model.Idpessoa });
+                    return Created("/api/PessoaJuridica", model );
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    ModelState.AddModelError(ex.Message, "Contate um administrador");
+                    return BadRequest(ModelState);
                 }
             }
             else
@@ -139,7 +142,8 @@ namespace faceitapi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                    ModelState.AddModelError(ex.Message, "Contate um administrador");
+                    return BadRequest(ModelState);
                 }
             }
             else

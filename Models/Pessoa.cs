@@ -18,6 +18,8 @@ namespace faceitapi.Models
         public string Senha { get; set; }
         public bool Excluido { get; set; }
         public int? GoogleId { get; set; }
+        public string Celular { get; set; }
+        public string Telefone { get; set; }
 
         public virtual Anexo Anexo { get; set; }
         public virtual Endereco Endereco { get; set; }

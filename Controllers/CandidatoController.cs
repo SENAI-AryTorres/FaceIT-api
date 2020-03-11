@@ -44,13 +44,14 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Insert([FromBody] Candidato candidato)
         {
             try
@@ -58,17 +59,18 @@ namespace faceitapi.Controllers
                 await faceitContext.Candidato.AddAsync(candidato);
                 await faceitContext.SaveChangesAsync();
 
-                return Created("api/Candidato", new { candidato.Idproposta });
+                return Created("api/Candidato",  candidato );
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
 
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Delete([FromBody] Candidato candidato)
         {
             try
@@ -80,7 +82,8 @@ namespace faceitapi.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
             }
         }
     }
