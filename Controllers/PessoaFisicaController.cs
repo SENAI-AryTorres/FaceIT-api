@@ -84,13 +84,23 @@ namespace faceitapi.Controllers
                     await faceitContext.Pessoa.AddAsync(model.IdpessoaNavigation);
                     await faceitContext.PessoaFisica.AddAsync(model);
                     await faceitContext.Endereco.AddAsync(model.IdpessoaNavigation.Endereco);
-                    await faceitContext.PessoaSkill.AddRangeAsync(model.IdpessoaNavigation.PessoaSkill);
-                    await faceitContext.Imagem.AddAsync(model.IdpessoaNavigation.Imagem);
-                    await faceitContext.Anexo.AddAsync(model.IdpessoaNavigation.Anexo);
+
+                    if (model.IdpessoaNavigation.PessoaSkill.Count > 0)
+                    {
+                        await faceitContext.PessoaSkill.AddRangeAsync(model.IdpessoaNavigation.PessoaSkill);
+                    }
+                    if (model.IdpessoaNavigation.Imagem.Bytes != null)
+                    {
+                        await faceitContext.Imagem.AddAsync(model.IdpessoaNavigation.Imagem);
+                    }
+                    if (model.IdpessoaNavigation.Anexo.Bytes != null)
+                    {
+                        await faceitContext.Anexo.AddAsync(model.IdpessoaNavigation.Anexo);
+                    }
 
                     await faceitContext.SaveChangesAsync();
 
-                    return Created("/api/PessoaFisica", model );
+                    return Created("/api/PessoaFisica", model);
                 }
                 catch (Exception ex)
                 {
@@ -122,8 +132,30 @@ namespace faceitapi.Controllers
                     faceitContext.PessoaFisica.Update(model);
                     faceitContext.Endereco.Update(model.IdpessoaNavigation.Endereco);
                     faceitContext.PessoaSkill.UpdateRange(model.IdpessoaNavigation.PessoaSkill);
-                    faceitContext.Imagem.Update(model.IdpessoaNavigation.Imagem);
-                    faceitContext.Anexo.Update(model.IdpessoaNavigation.Anexo);
+
+                    if (model.IdpessoaNavigation.Imagem.Bytes != null)
+                    {
+                        try
+                        {
+                            faceitContext.Imagem.Update(model.IdpessoaNavigation.Imagem);
+                        }
+                        catch (Exception)
+                        {
+                            await faceitContext.Imagem.AddAsync(model.IdpessoaNavigation.Imagem);
+                        }
+                    }
+
+                    if (model.IdpessoaNavigation.Anexo.Bytes != null)
+                    {
+                        try
+                        {
+                            faceitContext.Anexo.Update(model.IdpessoaNavigation.Anexo);
+                        }
+                        catch (Exception)
+                        {
+                            await faceitContext.Anexo.AddAsync(model.IdpessoaNavigation.Anexo);
+                        }
+                    }
 
                     await faceitContext.SaveChangesAsync();
 
