@@ -163,7 +163,7 @@ namespace faceitapi.Context
                 entity.Property(e => e.Idpessoa).HasColumnName("IDPessoa");
 
                 entity.Property(e => e.Celular)
-                    .HasMaxLength(11)
+                    .HasMaxLength(15)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Email)
@@ -177,7 +177,7 @@ namespace faceitapi.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.Telefone)
-                    .HasMaxLength(10)
+                    .HasMaxLength(14)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Tipo)
