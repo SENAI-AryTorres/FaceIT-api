@@ -52,7 +52,7 @@ namespace faceitapi.Controllers
                 var data = await faceitContext
                     .Proposta
                     .Include(x => x.PropostaSkill)
-                    .Where(x => x.Encerrada == false && x.Idproposta == idProposta)
+                    .Where(x => x.Encerrada == false && x.IDProposta == idProposta)
                     .ToListAsync();
 
                 return Ok(data);

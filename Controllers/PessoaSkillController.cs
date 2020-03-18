@@ -21,17 +21,17 @@ namespace faceitapi.Controllers
             faceitContext = new faceitContext();
         }
 
-        [HttpGet("{idPessoa}")]
+        [HttpGet("{IDPessoa}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetSkillsPessoa(int idPessoa)
+        public async Task<IActionResult> GetSkillsPessoa(int IDPessoa)
         {
             try
             {
                 var data = await faceitContext.PessoaSkill
-                    .Where(x => x.Idpessoa == idPessoa)
-                    .Include(x => x.Id)
+                    .Where(x => x.IDPessoa == IDPessoa)
+                    .Include(x => x.ID)
                     .ToListAsync();
 
                 if (data.Count > 0)

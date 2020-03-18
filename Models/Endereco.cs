@@ -1,20 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace faceitapi.Models
 {
     public partial class Endereco
     {
-        public string Cep { get; set; }
+        [StringLength(9)]
+        public string CEP { get; set; }
+        [StringLength(150)]
         public string Pais { get; set; }
-        public string Uf { get; set; }
+        [StringLength(2)]
+        public string UF { get; set; }
+        [StringLength(150)]
         public string Municipio { get; set; }
+        [StringLength(150)]
         public string Logradouro { get; set; }
+        [StringLength(50)]
         public string Numero { get; set; }
+        [StringLength(150)]
         public string Complemento { get; set; }
+        [StringLength(150)]
         public string Bairro { get; set; }
-        public int Idpessoa { get; set; }
+        [Key]
+        public int IDPessoa { get; set; }
 
-        public virtual Pessoa IdpessoaNavigation { get; set; }
+        [ForeignKey(nameof(IDPessoa))]
+        [InverseProperty(nameof(Pessoa.Endereco))]
+        public virtual Pessoa IDPessoaNavigation { get; set; }
     }
 }

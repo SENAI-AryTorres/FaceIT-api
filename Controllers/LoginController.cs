@@ -26,7 +26,7 @@ namespace faceitapi.Controllers
         public async Task<IActionResult> Login([FromBody] LoginGet loginGet)
         {
             var pessoa = await faceitContext.Pessoa
-                .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleId == loginGet.GoogleId));
+                .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleID == loginGet.GoogleId));
 
             if (pessoa != null && pessoa.Excluido != true)
             {
@@ -36,24 +36,24 @@ namespace faceitapi.Controllers
                     {
                         return Ok(
                             await faceitContext.PessoaFisica
-                            .Include(x => x.IdpessoaNavigation)
-                            .Include(x => x.IdpessoaNavigation.Endereco)
-                            .Include(x => x.IdpessoaNavigation.PessoaSkill)
-                            .Include(x => x.IdpessoaNavigation.Anexo)
-                            .Include(x => x.IdpessoaNavigation.Imagem)
-                            .FirstOrDefaultAsync(x => x.Idpessoa == pessoa.Idpessoa)
+                            .Include(x => x.IDPessoaNavigation)
+                            .Include(x => x.IDPessoaNavigation.Endereco)
+                            .Include(x => x.IDPessoaNavigation.PessoaSkill)
+                            .Include(x => x.IDPessoaNavigation.Anexo)
+                            .Include(x => x.IDPessoaNavigation.Imagem)
+                            .FirstOrDefaultAsync(x => x.IDPessoa == pessoa.IDPessoa)
                             );
                     }
                     else
                     {
                         return Ok(
                             await faceitContext.PessoaJuridica
-                            .Include(x => x.IdpessoaNavigation)
-                            .Include(x => x.IdpessoaNavigation.Endereco)
-                            .Include(x => x.IdpessoaNavigation.PessoaSkill)
-                            .Include(x => x.IdpessoaNavigation.Anexo)
-                            .Include(x => x.IdpessoaNavigation.Imagem)
-                            .FirstOrDefaultAsync(x => x.Idpessoa == pessoa.Idpessoa)
+                            .Include(x => x.IDPessoaNavigation)
+                            .Include(x => x.IDPessoaNavigation.Endereco)
+                            .Include(x => x.IDPessoaNavigation.PessoaSkill)
+                            .Include(x => x.IDPessoaNavigation.Anexo)
+                            .Include(x => x.IDPessoaNavigation.Imagem)
+                            .FirstOrDefaultAsync(x => x.IDPessoa == pessoa.IDPessoa)
                             );
                     }
                 }

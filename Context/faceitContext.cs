@@ -42,338 +42,210 @@ namespace faceitapi.Context
         {
             modelBuilder.Entity<Anexo>(entity =>
             {
-                entity.HasKey(e => e.Idpessoa);
+                entity.Property(e => e.IDPessoa).ValueGeneratedNever();
 
-                entity.Property(e => e.Idpessoa)
-                    .HasColumnName("IDPessoa")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Nome).IsUnicode(false);
 
-                entity.Property(e => e.Bytes).IsRequired();
-
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.IdpessoaNavigation)
+                entity.HasOne(d => d.IDPessoaNavigation)
                     .WithOne(p => p.Anexo)
-                    .HasForeignKey<Anexo>(d => d.Idpessoa)
+                    .HasForeignKey<Anexo>(d => d.IDPessoa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Anexo_Pessoa");
             });
 
             modelBuilder.Entity<Candidato>(entity =>
             {
-                entity.HasKey(e => new { e.Idproposta, e.Idpessoa });
+                entity.HasKey(e => new { e.IDProposta, e.IDPessoa });
 
-                entity.Property(e => e.Idproposta).HasColumnName("IDProposta");
-
-                entity.Property(e => e.Idpessoa).HasColumnName("IDPessoa");
-
-                entity.HasOne(d => d.IdpessoaNavigation)
+                entity.HasOne(d => d.IDPessoaNavigation)
                     .WithMany(p => p.Candidato)
-                    .HasForeignKey(d => d.Idpessoa)
+                    .HasForeignKey(d => d.IDPessoa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Candidato_Pessoa");
 
-                entity.HasOne(d => d.IdpropostaNavigation)
+                entity.HasOne(d => d.IDPropostaNavigation)
                     .WithMany(p => p.Candidato)
-                    .HasForeignKey(d => d.Idproposta)
+                    .HasForeignKey(d => d.IDProposta)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Candidato_Proposta");
             });
 
             modelBuilder.Entity<Endereco>(entity =>
             {
-                entity.HasKey(e => e.Idpessoa);
+                entity.Property(e => e.IDPessoa).ValueGeneratedNever();
 
-                entity.Property(e => e.Idpessoa)
-                    .HasColumnName("IDPessoa")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Bairro).IsUnicode(false);
 
-                entity.Property(e => e.Bairro)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.CEP).IsUnicode(false);
 
-                entity.Property(e => e.Cep)
-                    .HasColumnName("CEP")
-                    .HasMaxLength(9)
-                    .IsUnicode(false);
+                entity.Property(e => e.Complemento).IsUnicode(false);
 
-                entity.Property(e => e.Complemento)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.Logradouro).IsUnicode(false);
 
-                entity.Property(e => e.Logradouro)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.Municipio).IsUnicode(false);
 
-                entity.Property(e => e.Municipio)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.Numero).IsUnicode(false);
 
-                entity.Property(e => e.Numero)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Pais).IsUnicode(false);
 
-                entity.Property(e => e.Pais)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.UF).IsUnicode(false);
 
-                entity.Property(e => e.Uf)
-                    .HasColumnName("UF")
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.IdpessoaNavigation)
+                entity.HasOne(d => d.IDPessoaNavigation)
                     .WithOne(p => p.Endereco)
-                    .HasForeignKey<Endereco>(d => d.Idpessoa)
+                    .HasForeignKey<Endereco>(d => d.IDPessoa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Endereco_Pessoa");
             });
 
             modelBuilder.Entity<Imagem>(entity =>
             {
-                entity.HasKey(e => e.Idpessoa);
+                entity.Property(e => e.IDPessoa).ValueGeneratedNever();
 
-                entity.Property(e => e.Idpessoa)
-                    .HasColumnName("IDPessoa")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Nome).IsUnicode(false);
 
-                entity.Property(e => e.Bytes).IsRequired();
-
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.IdpessoaNavigation)
+                entity.HasOne(d => d.IDPessoaNavigation)
                     .WithOne(p => p.Imagem)
-                    .HasForeignKey<Imagem>(d => d.Idpessoa)
+                    .HasForeignKey<Imagem>(d => d.IDPessoa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Imagem_Pessoa");
             });
 
             modelBuilder.Entity<Pessoa>(entity =>
             {
-                entity.HasKey(e => e.Idpessoa);
-
                 entity.HasIndex(e => e.Email)
                     .HasName("IX_Pessoa")
                     .IsUnique();
 
-                entity.Property(e => e.Idpessoa).HasColumnName("IDPessoa");
+                entity.Property(e => e.Celular).IsUnicode(false);
 
-                entity.Property(e => e.Celular)
-                    .HasMaxLength(15)
-                    .IsUnicode(false);
+                entity.Property(e => e.Email).IsUnicode(false);
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.Senha).IsUnicode(false);
 
-                entity.Property(e => e.GoogleId).HasColumnName("GoogleID");
+                entity.Property(e => e.Telefone).IsUnicode(false);
 
-                entity.Property(e => e.Senha)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Telefone)
-                    .HasMaxLength(14)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Tipo)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
+                entity.Property(e => e.Tipo).IsUnicode(false);
             });
 
             modelBuilder.Entity<PessoaFisica>(entity =>
             {
-                entity.HasKey(e => e.Idpessoa);
-
-                entity.HasIndex(e => e.Cpf)
+                entity.HasIndex(e => e.CPF)
                     .HasName("IX_PessoaFisica")
                     .IsUnique();
 
-                entity.Property(e => e.Idpessoa)
-                    .HasColumnName("IDPessoa")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IDPessoa).ValueGeneratedNever();
 
-                entity.Property(e => e.Cpf)
-                    .IsRequired()
-                    .HasColumnName("CPF")
-                    .HasMaxLength(14)
-                    .IsUnicode(false);
+                entity.Property(e => e.CPF).IsUnicode(false);
 
-                entity.Property(e => e.Nome)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.Nome).IsUnicode(false);
 
-                entity.Property(e => e.Rg)
-                    .HasColumnName("RG")
-                    .HasMaxLength(45)
-                    .IsUnicode(false);
+                entity.Property(e => e.RG).IsUnicode(false);
 
-                entity.HasOne(d => d.IdpessoaNavigation)
+                entity.HasOne(d => d.IDPessoaNavigation)
                     .WithOne(p => p.PessoaFisica)
-                    .HasForeignKey<PessoaFisica>(d => d.Idpessoa)
+                    .HasForeignKey<PessoaFisica>(d => d.IDPessoa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PessoaFisica_Pessoa");
             });
 
             modelBuilder.Entity<PessoaJuridica>(entity =>
             {
-                entity.HasKey(e => e.Idpessoa);
-
-                entity.HasIndex(e => e.Cnpj)
+                entity.HasIndex(e => e.CNPJ)
                     .HasName("IX_PessoaJuridica")
                     .IsUnique();
 
-                entity.Property(e => e.Idpessoa)
-                    .HasColumnName("IDPessoa")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IDPessoa).ValueGeneratedNever();
 
-                entity.Property(e => e.Cnpj)
-                    .IsRequired()
-                    .HasColumnName("CNPJ")
-                    .HasMaxLength(18)
-                    .IsUnicode(false);
+                entity.Property(e => e.CNPJ).IsUnicode(false);
 
-                entity.Property(e => e.Ie)
-                    .HasColumnName("IE")
-                    .HasMaxLength(45)
-                    .IsUnicode(false);
+                entity.Property(e => e.IE).IsUnicode(false);
 
-                entity.Property(e => e.NomeFantasia)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.NomeFantasia).IsUnicode(false);
 
-                entity.Property(e => e.RazaoSocial)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.RazaoSocial).IsUnicode(false);
 
-                entity.HasOne(d => d.IdpessoaNavigation)
+                entity.HasOne(d => d.IDPessoaNavigation)
                     .WithOne(p => p.PessoaJuridica)
-                    .HasForeignKey<PessoaJuridica>(d => d.Idpessoa)
+                    .HasForeignKey<PessoaJuridica>(d => d.IDPessoa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PessoaJuridica_Pessoa");
             });
 
             modelBuilder.Entity<PessoaSkill>(entity =>
             {
-                entity.HasKey(e => new { e.Idpessoa, e.Idskill, e.IdtipoSkill });
+                entity.HasKey(e => new { e.IDPessoa, e.IDSkill, e.IDTipoSkill });
 
-                entity.Property(e => e.Idpessoa).HasColumnName("IDPessoa");
-
-                entity.Property(e => e.Idskill).HasColumnName("IDSkill");
-
-                entity.Property(e => e.IdtipoSkill).HasColumnName("IDTipoSkill");
-
-                entity.HasOne(d => d.IdpessoaNavigation)
+                entity.HasOne(d => d.IDPessoaNavigation)
                     .WithMany(p => p.PessoaSkill)
-                    .HasForeignKey(d => d.Idpessoa)
+                    .HasForeignKey(d => d.IDPessoa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PessoaSkill_Pessoa");
 
-                entity.HasOne(d => d.Id)
+                entity.HasOne(d => d.ID)
                     .WithMany(p => p.PessoaSkill)
-                    .HasForeignKey(d => new { d.Idskill, d.IdtipoSkill })
+                    .HasForeignKey(d => new { d.IDSkill, d.IDTipoSkill })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PessoaSkill_Skill");
             });
 
             modelBuilder.Entity<Proposta>(entity =>
             {
-                entity.HasKey(e => e.Idproposta);
+                entity.Property(e => e.IDProposta).ValueGeneratedNever();
 
-                entity.Property(e => e.Idproposta)
-                    .HasColumnName("IDProposta")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Cidade).IsUnicode(false);
 
-                entity.Property(e => e.Cidade)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.Descricao).IsUnicode(false);
 
-                entity.Property(e => e.Descricao)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
+                entity.Property(e => e.Latitude).IsUnicode(false);
 
-                entity.Property(e => e.Idempresa).HasColumnName("IDEmpresa");
+                entity.Property(e => e.Longitude).IsUnicode(false);
 
-                entity.Property(e => e.Latitude)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
+                entity.Property(e => e.TipoContrato).IsUnicode(false);
 
-                entity.Property(e => e.Longitude)
-                    .HasMaxLength(150)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.TipoContrato)
-                    .HasMaxLength(2)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.IdempresaNavigation)
+                entity.HasOne(d => d.IDEmpresaNavigation)
                     .WithMany(p => p.Proposta)
-                    .HasForeignKey(d => d.Idempresa)
+                    .HasForeignKey(d => d.IDEmpresa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Proposta_Pessoa1");
             });
 
             modelBuilder.Entity<PropostaSkill>(entity =>
             {
-                entity.HasKey(e => new { e.Idproposta, e.Idskill, e.IdtipoSkill });
+                entity.HasKey(e => new { e.IDProposta, e.IDSkill, e.IDTipoSkill });
 
-                entity.Property(e => e.Idproposta).HasColumnName("IDProposta");
-
-                entity.Property(e => e.Idskill).HasColumnName("IDSkill");
-
-                entity.Property(e => e.IdtipoSkill).HasColumnName("IDTipoSkill");
-
-                entity.HasOne(d => d.IdpropostaNavigation)
+                entity.HasOne(d => d.IDPropostaNavigation)
                     .WithMany(p => p.PropostaSkill)
-                    .HasForeignKey(d => d.Idproposta)
+                    .HasForeignKey(d => d.IDProposta)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PropostaSkill_Proposta");
 
-                entity.HasOne(d => d.Id)
+                entity.HasOne(d => d.ID)
                     .WithMany(p => p.PropostaSkill)
-                    .HasForeignKey(d => new { d.Idskill, d.IdtipoSkill })
+                    .HasForeignKey(d => new { d.IDSkill, d.IDTipoSkill })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PropostaSkill_Skill");
             });
 
             modelBuilder.Entity<Skill>(entity =>
             {
-                entity.HasKey(e => new { e.Idskill, e.IdtipoSkill });
+                entity.HasKey(e => new { e.IDSkill, e.IDTipoSkill });
 
-                entity.Property(e => e.Idskill)
-                    .HasColumnName("IDSkill")
-                    .ValueGeneratedOnAdd();
+                entity.Property(e => e.IDSkill).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.IdtipoSkill).HasColumnName("IDTipoSkill");
+                entity.Property(e => e.Descricao).IsUnicode(false);
 
-                entity.Property(e => e.Descricao)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.IdtipoSkillNavigation)
+                entity.HasOne(d => d.IDTipoSkillNavigation)
                     .WithMany(p => p.Skill)
-                    .HasForeignKey(d => d.IdtipoSkill)
+                    .HasForeignKey(d => d.IDTipoSkill)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Skill_TipoSkill");
             });
 
             modelBuilder.Entity<TipoSkill>(entity =>
             {
-                entity.HasKey(e => e.IdtipoSkill);
+                entity.Property(e => e.IDTipoSkill).ValueGeneratedNever();
 
-                entity.Property(e => e.IdtipoSkill)
-                    .HasColumnName("IDTipoSkill")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Descricao)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Descricao).IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);
