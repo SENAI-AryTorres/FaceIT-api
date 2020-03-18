@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace faceitapi.Models
 {
     public partial class Imagem
     {
-        public int Idpessoa { get; set; }
+        [Key]
+        public int IDPessoa { get; set; }
+        [StringLength(150)]
         public string Nome { get; set; }
+        [Required]
         public byte[] Bytes { get; set; }
 
-        public virtual Pessoa IdpessoaNavigation { get; set; }
+        [ForeignKey(nameof(IDPessoa))]
+        [InverseProperty(nameof(Pessoa.Imagem))]
+        public virtual Pessoa IDPessoaNavigation { get; set; }
     }
 }

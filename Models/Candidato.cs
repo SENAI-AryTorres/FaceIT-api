@@ -1,14 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace faceitapi.Models
 {
     public partial class Candidato
     {
-        public int Idproposta { get; set; }
-        public int Idpessoa { get; set; }
+        [Key]
+        public int IDProposta { get; set; }
+        [Key]
+        public int IDPessoa { get; set; }
 
-        public virtual Pessoa IdpessoaNavigation { get; set; }
-        public virtual Proposta IdpropostaNavigation { get; set; }
+        [ForeignKey(nameof(IDPessoa))]
+        [InverseProperty(nameof(Pessoa.Candidato))]
+        public virtual Pessoa IDPessoaNavigation { get; set; }
+        [ForeignKey(nameof(IDProposta))]
+        [InverseProperty(nameof(Proposta.Candidato))]
+        public virtual Proposta IDPropostaNavigation { get; set; }
     }
 }

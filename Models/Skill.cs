@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace faceitapi.Models
 {
@@ -11,12 +13,20 @@ namespace faceitapi.Models
             PropostaSkill = new HashSet<PropostaSkill>();
         }
 
-        public int Idskill { get; set; }
-        public int IdtipoSkill { get; set; }
+        [Key]
+        public int IDSkill { get; set; }
+        [Key]
+        public int IDTipoSkill { get; set; }
+        [Required]
+        [StringLength(50)]
         public string Descricao { get; set; }
 
-        public virtual TipoSkill IdtipoSkillNavigation { get; set; }
+        [ForeignKey(nameof(IDTipoSkill))]
+        [InverseProperty(nameof(TipoSkill.Skill))]
+        public virtual TipoSkill IDTipoSkillNavigation { get; set; }
+        [InverseProperty("ID")]
         public virtual ICollection<PessoaSkill> PessoaSkill { get; set; }
+        [InverseProperty("ID")]
         public virtual ICollection<PropostaSkill> PropostaSkill { get; set; }
     }
 }

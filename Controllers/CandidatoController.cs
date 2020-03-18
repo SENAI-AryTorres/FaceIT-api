@@ -30,7 +30,7 @@ namespace faceitapi.Controllers
             try
             {
                 var data = await faceitContext.Candidato
-                    .Where(x => x.Idproposta == idProposta)
+                    .Where(x => x.IDPessoa == idProposta)
                     .ToListAsync();
 
                 if (data.Count > 0)
