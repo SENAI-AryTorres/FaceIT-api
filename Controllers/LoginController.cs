@@ -35,24 +35,24 @@ namespace faceitapi.Controllers
                     if (pessoa.Tipo.Equals("PF"))
                     {
                         return Ok(
-                            await faceitContext.PessoaFisica
-                            .Include(x => x.IDPessoaNavigation)
-                            .Include(x => x.IDPessoaNavigation.Endereco)
-                            .Include(x => x.IDPessoaNavigation.PessoaSkill)
-                            .Include(x => x.IDPessoaNavigation.Anexo)
-                            .Include(x => x.IDPessoaNavigation.Imagem)
+                            await faceitContext.Pessoa
+                            .Include(x => x.PessoaFisica)
+                            .Include(x => x.Endereco)
+                            .Include(x => x.PessoaSkill)
+                            .Include(x => x.Anexo)
+                            .Include(x => x.Imagem)
                             .FirstOrDefaultAsync(x => x.IDPessoa == pessoa.IDPessoa)
                             );
                     }
                     else
                     {
                         return Ok(
-                            await faceitContext.PessoaJuridica
-                            .Include(x => x.IDPessoaNavigation)
-                            .Include(x => x.IDPessoaNavigation.Endereco)
-                            .Include(x => x.IDPessoaNavigation.PessoaSkill)
-                            .Include(x => x.IDPessoaNavigation.Anexo)
-                            .Include(x => x.IDPessoaNavigation.Imagem)
+                            await faceitContext.Pessoa
+                            .Include(x => x.PessoaJuridica)
+                            .Include(x => x.Endereco)
+                            .Include(x => x.PessoaSkill)
+                            .Include(x => x.Anexo)
+                            .Include(x => x.Imagem)
                             .FirstOrDefaultAsync(x => x.IDPessoa == pessoa.IDPessoa)
                             );
                     }
