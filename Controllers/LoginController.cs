@@ -3,7 +3,11 @@ using faceitapi.Models.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace faceitapi.Controllers
@@ -13,10 +17,12 @@ namespace faceitapi.Controllers
     public class LoginController : ControllerBase
     {
         private readonly faceitContext faceitContext;
+        private readonly IConfiguration config;
 
-        public LoginController()
+        public LoginController(IConfiguration configuration)
         {
             faceitContext = new faceitContext();
+            config = configuration;
         }
 
         [HttpPost]
@@ -68,5 +74,27 @@ namespace faceitapi.Controllers
                 return NotFound();
             }
         }
+
+        private string GerarToken()
+        {
+            var issuer = config["Jwt:Issuer"];
+            var audience = config["Jwt:Audience"];
+            var expiry = DateTime.Now.AddMinutes(120);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: issuer,
+                audience: audience,
+                expires: expiry,
+                signingCredentials: credentials
+                );
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var stringToken = tokenHandler.WriteToken(token);
+            return stringToken;
+        }
+
+
     }
 }
