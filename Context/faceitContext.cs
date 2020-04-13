@@ -2,11 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using faceitapi.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace faceitapi.Context
 {
     public partial class faceitContext : DbContext
     {
+        private readonly IConfiguration config;
         public faceitContext()
         {
         }
@@ -33,8 +35,7 @@ namespace faceitapi.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=face-it.mssql.somee.com ;Database=face-it;user=DonSantos_SQLLogin_1;password=zuradk54yr;");
+                optionsBuilder.UseSqlServer(config.GetConnectionString("dbsomee"));
             }
         }
 
