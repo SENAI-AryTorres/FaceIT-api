@@ -8,13 +8,8 @@ namespace faceitapi.Context
 {
     public partial class faceitContext : DbContext
     {
-        private readonly IConfiguration config;
-        public faceitContext()
-        {
-        }
 
-        public faceitContext(DbContextOptions<faceitContext> options)
-            : base(options)
+        public faceitContext(DbContextOptions<faceitContext> options) : base(options)
         {
         }
 
@@ -30,14 +25,6 @@ namespace faceitapi.Context
         public virtual DbSet<PropostaSkill> PropostaSkill { get; set; }
         public virtual DbSet<Skill> Skill { get; set; }
         public virtual DbSet<TipoSkill> TipoSkill { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(config.GetConnectionString("dbsomee"));
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

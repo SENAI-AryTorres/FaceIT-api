@@ -16,9 +16,9 @@ namespace faceitapi.Controllers
     {
         private readonly faceitContext faceitContext;
 
-        public PessoaSkillController()
+        public PessoaSkillController(faceitContext context)
         {
-            faceitContext = new faceitContext();
+            faceitContext = context;
         }
 
         [HttpGet("{IDPessoa}")]

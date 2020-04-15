@@ -16,9 +16,9 @@ namespace faceitapi.Controllers
     {
         private readonly faceitContext faceitContext;
 
-        public CandidatoController()
+        public CandidatoController(faceitContext context)
         {
-            faceitContext = new faceitContext();
+            faceitContext = context;
         }
 
         [HttpGet("{idProposta}")]
