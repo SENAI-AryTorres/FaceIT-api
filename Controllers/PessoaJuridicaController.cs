@@ -26,8 +26,6 @@ namespace faceitapi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("GetAll")]
-        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -49,15 +47,11 @@ namespace faceitapi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("teste")]
-        [Authorize]
-        public string teste() => "deu certo";
-
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> GetById(int id)
         {
             try
