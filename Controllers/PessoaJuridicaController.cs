@@ -1,6 +1,8 @@
 ﻿using faceitapi.Context;
 using faceitapi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,9 +17,9 @@ namespace faceitapi.Controllers
     {
         private readonly faceitContext faceitContext;
 
-        public PessoaJuridicaController()
+        public PessoaJuridicaController(faceitContext context)
         {
-            faceitContext = new faceitContext();
+            faceitContext = context;
         }
 
         //Metodo vai ver removido para produção
@@ -45,11 +47,11 @@ namespace faceitapi.Controllers
             }
         }
 
-
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> GetById(int id)
         {
             try

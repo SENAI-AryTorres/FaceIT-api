@@ -1,5 +1,6 @@
 ﻿using faceitapi.Context;
 using faceitapi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,14 +11,15 @@ using System.Threading.Tasks;
 namespace faceitapi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class PessoaFisicaController : ControllerBase
     {
         private readonly faceitContext faceitContext;
 
-        public PessoaFisicaController()
+        public PessoaFisicaController(faceitContext context)
         {
-            faceitContext = new faceitContext();
+            faceitContext = context;
         }
 
         //Esse metodo será removido para produção

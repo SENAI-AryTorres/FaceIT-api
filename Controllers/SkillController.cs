@@ -13,9 +13,9 @@ namespace faceitapi.Controllers
     {
         private readonly faceitContext faceitContext;
 
-        public SkillController()
+        public SkillController(faceitContext context)
         {
-            faceitContext = new faceitContext();
+            faceitContext = context;
         }
 
         [HttpGet]

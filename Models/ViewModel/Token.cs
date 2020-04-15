@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace faceitapi.Models.ViewModel
 {
-    public class LoginGet
+    public class Token
     {
-        public string Email { get; set; }
-        public string Senha { get; set; }
-        public int? GoogleId { get; set; }
+        public string Value { get; set; }
+        public DateTime Date { get; set; }
     }
 }

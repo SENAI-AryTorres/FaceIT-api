@@ -16,9 +16,9 @@ namespace faceitapi.Controllers
     {
         private readonly faceitContext faceitContext;
 
-        public ImagemController()
+        public ImagemController(faceitContext context)
         {
-            faceitContext = new faceitContext();
+            faceitContext = context;
         }
 
         [HttpGet]

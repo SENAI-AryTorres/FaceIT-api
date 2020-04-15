@@ -1,9 +1,15 @@
 ﻿using faceitapi.Context;
+using faceitapi.Models;
 using faceitapi.Models.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace faceitapi.Controllers
@@ -13,17 +19,19 @@ namespace faceitapi.Controllers
     public class LoginController : ControllerBase
     {
         private readonly faceitContext faceitContext;
+        private readonly IConfiguration config;
 
-        public LoginController()
+        public LoginController(IConfiguration configuration, faceitContext context)
         {
-            faceitContext = new faceitContext();
+            faceitContext = context; 
+            config = configuration;
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Login([FromBody] LoginGet loginGet)
+        public async Task<IActionResult> Login([FromBody] LoginEntry loginGet)
         {
             var pessoa = await faceitContext.Pessoa
                 .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleID == loginGet.GoogleId));
@@ -34,28 +42,28 @@ namespace faceitapi.Controllers
                 {
                     if (pessoa.Tipo.Equals("PF"))
                     {
-                        return Ok(
-                            await faceitContext.PessoaFisica
-                            .Include(x => x.IDPessoaNavigation)
-                            .Include(x => x.IDPessoaNavigation.Endereco)
-                            .Include(x => x.IDPessoaNavigation.PessoaSkill)
-                            .Include(x => x.IDPessoaNavigation.Anexo)
-                            .Include(x => x.IDPessoaNavigation.Imagem)
-                            .FirstOrDefaultAsync(x => x.IDPessoa == pessoa.IDPessoa)
-                            );
+                        pessoa = await faceitContext.Pessoa
+                            .Include(x => x.PessoaFisica)
+                            .Include(x => x.Endereco)
+                            .Include(x => x.PessoaSkill)
+                            .Include(x => x.Anexo)
+                            .Include(x => x.Imagem)
+                            .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleID == loginGet.GoogleId));
                     }
                     else
                     {
-                        return Ok(
-                            await faceitContext.PessoaJuridica
-                            .Include(x => x.IDPessoaNavigation)
-                            .Include(x => x.IDPessoaNavigation.Endereco)
-                            .Include(x => x.IDPessoaNavigation.PessoaSkill)
-                            .Include(x => x.IDPessoaNavigation.Anexo)
-                            .Include(x => x.IDPessoaNavigation.Imagem)
-                            .FirstOrDefaultAsync(x => x.IDPessoa == pessoa.IDPessoa)
-                            );
+                        pessoa = await faceitContext.Pessoa
+                            .Include(x => x.PessoaJuridica)
+                            .Include(x => x.Endereco)
+                            .Include(x => x.PessoaSkill)
+                            .Include(x => x.Anexo)
+                            .Include(x => x.Imagem)
+                            .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleID == loginGet.GoogleId));
                     }
+
+                    var token = new Token{ Value = GerarToken(pessoa), Date = DateTime.Now };
+
+                    return Ok(new LoginRetun() { pessoa = pessoa, token = token });
                 }
                 catch (Exception ex)
                 {
@@ -68,5 +76,31 @@ namespace faceitapi.Controllers
                 return NotFound();
             }
         }
+
+        private string GerarToken(Pessoa pessoa)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            //Obtem a chave
+            var securityKey = Encoding.ASCII.GetBytes(config["Jwt:Key"]);
+            
+            //Descreve o token
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[] 
+                {
+                    new Claim(ClaimTypes.Email, pessoa.Email)
+                }),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            //Cria o token
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
+        }
+
+
     }
 }
