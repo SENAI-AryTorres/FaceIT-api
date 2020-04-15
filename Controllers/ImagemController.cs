@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using faceitapi.Context;
 using faceitapi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ namespace faceitapi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "adm")]
     public class ImagemController : ControllerBase
     {
         private readonly faceitContext faceitContext;

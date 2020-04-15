@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace faceitapi.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     [ApiController]
     public class PessoaFisicaController : ControllerBase
     {
@@ -26,6 +25,7 @@ namespace faceitapi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "adm")]
         public async Task<IActionResult> GetAll()
         {
             var data = await faceitContext.PessoaFisica
@@ -44,6 +44,7 @@ namespace faceitapi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> GetById(int id)
         {
             try
@@ -75,6 +76,7 @@ namespace faceitapi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> Insert([FromBody] PessoaFisica model)
         {
             if (ModelState.IsValid)
@@ -124,6 +126,7 @@ namespace faceitapi.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> EditOrDelete([FromBody] PessoaFisica model)
         {
             if (ModelState.IsValid)

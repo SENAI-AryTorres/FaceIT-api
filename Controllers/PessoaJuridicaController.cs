@@ -26,6 +26,7 @@ namespace faceitapi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "adm")]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -84,6 +85,7 @@ namespace faceitapi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> Insert([FromBody] PessoaJuridica model)
         {
             if (ModelState.IsValid)
@@ -134,6 +136,7 @@ namespace faceitapi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> EditOrDelete([FromBody] PessoaJuridica model)
         {
             if (ModelState.IsValid)

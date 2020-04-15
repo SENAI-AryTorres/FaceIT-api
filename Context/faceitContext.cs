@@ -2,14 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using faceitapi.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace faceitapi.Context
 {
     public partial class faceitContext : DbContext
     {
 
-        public faceitContext(DbContextOptions<faceitContext> options) : base(options)
+        public faceitContext(DbContextOptions<faceitContext> options)
+            : base(options)
         {
         }
 
@@ -107,6 +107,8 @@ namespace faceitapi.Context
                 entity.Property(e => e.Celular).IsUnicode(false);
 
                 entity.Property(e => e.Email).IsUnicode(false);
+
+                entity.Property(e => e.Role).IsUnicode(false);
 
                 entity.Property(e => e.Senha).IsUnicode(false);
 

@@ -1,5 +1,6 @@
 ﻿using faceitapi.Context;
 using faceitapi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace faceitapi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> GetAll()
         {
             try
@@ -42,9 +44,35 @@ namespace faceitapi.Controllers
             }
         }
 
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Route("PropostasEmpresa")]
+        [Authorize]
+        public async Task<IActionResult> GetAllByCompany(int idEmpresa)
+        {
+            try
+            {
+                var data = await faceitContext
+                    .Proposta
+                    .Include(x => x.PropostaSkill)
+                    .Where(x => x.Encerrada == false && x.IDEmpresa.Equals(idEmpresa))
+                    .ToListAsync();
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
+            }
+        }
+
         [HttpGet("{idPropsota}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> GetById(int idProposta)
         {
             try
@@ -67,6 +95,7 @@ namespace faceitapi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> Insert([FromBody] Proposta proposta)
         {
             if (ModelState.IsValid)

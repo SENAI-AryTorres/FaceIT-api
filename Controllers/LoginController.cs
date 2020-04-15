@@ -89,7 +89,8 @@ namespace faceitapi.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[] 
                 {
-                    new Claim(ClaimTypes.Email, pessoa.Email)
+                    new Claim(ClaimTypes.Email, pessoa.Email),
+                    new Claim(ClaimTypes.Role, pessoa.Role)
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(securityKey), SecurityAlgorithms.HmacSha256Signature)
