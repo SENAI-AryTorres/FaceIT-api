@@ -33,6 +33,11 @@ namespace faceitapi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Login([FromBody] LoginEntry loginGet)
         {
+            if (string.IsNullOrEmpty(loginGet.Senha) && string.IsNullOrEmpty(loginGet.GoogleId.ToString()))
+            {
+                return BadRequest();
+            }
+
             var pessoa = await faceitContext.Pessoa
                 .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleID == loginGet.GoogleId));
 
