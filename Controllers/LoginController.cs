@@ -39,7 +39,7 @@ namespace faceitapi.Controllers
             }
 
             var pessoa = await faceitContext.Pessoa
-                .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleID == loginGet.GoogleId));
+                .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleID.GetValueOrDefault() == loginGet.GoogleId));
 
             if (pessoa != null && pessoa.Excluido != true)
             {
