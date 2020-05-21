@@ -35,7 +35,7 @@ namespace faceitapi
             services.AddDbContext<faceitContext>(options => options.UseSqlServer(Configuration.GetConnectionString("dbsomee")));
 
             //Para evitar problemas de token local host (não conheço)
-            services.AddCors();
+            //services.AddCors();
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
@@ -95,11 +95,11 @@ namespace faceitapi
 
             app.UseRouting();
 
-            app.UseCors(x => x
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            );
+            //app.UseCors(x => x
+            //.AllowAnyOrigin()
+            //.AllowAnyMethod()
+            //.AllowAnyHeader()
+            //);
 
             app.UseAuthentication();
 
