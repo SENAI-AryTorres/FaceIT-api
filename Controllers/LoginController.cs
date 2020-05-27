@@ -23,7 +23,7 @@ namespace faceitapi.Controllers
 
         public LoginController(IConfiguration configuration, faceitContext context)
         {
-            faceitContext = context; 
+            faceitContext = context;
             config = configuration;
         }
 
@@ -66,7 +66,7 @@ namespace faceitapi.Controllers
                             .FirstOrDefaultAsync(x => x.Email == loginGet.Email && (x.Senha == loginGet.Senha || x.GoogleID == loginGet.GoogleId));
                     }
 
-                    var token = new Token{ Value = GerarToken(pessoa), Date = DateTime.Now };
+                    var token = new Token { Value = GerarToken(pessoa), Date = DateTime.Now };
 
                     return Ok(new LoginRetun() { pessoa = pessoa, token = token });
                 }
@@ -88,11 +88,11 @@ namespace faceitapi.Controllers
 
             //Obtem a chave
             var securityKey = Encoding.ASCII.GetBytes(config["Jwt:Key"]);
-            
+
             //Descreve o token
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[] 
+                Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Email, pessoa.Email),
                     new Claim(ClaimTypes.Role, pessoa.Role)

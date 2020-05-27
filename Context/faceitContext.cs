@@ -1,7 +1,5 @@
-﻿using System;
+﻿using faceitapi.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using faceitapi.Models;
 
 namespace faceitapi.Context
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace faceitapi.Models.ViewModel
+﻿namespace faceitapi.Models.ViewModel
 {
     public class LoginEntry
     {

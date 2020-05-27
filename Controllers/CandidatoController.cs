@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -62,7 +61,7 @@ namespace faceitapi.Controllers
                 await faceitContext.Candidato.AddAsync(candidato);
                 await faceitContext.SaveChangesAsync();
 
-                return Created("api/Candidato",  candidato );
+                return Created("api/Candidato", candidato);
             }
             catch (Exception ex)
             {

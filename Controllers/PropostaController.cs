@@ -107,7 +107,7 @@ namespace faceitapi.Controllers
                     await faceitContext.PropostaSkill.AddRangeAsync(proposta.PropostaSkill);
                     await faceitContext.SaveChangesAsync();
 
-                    return Created("/api/PessoaJuridica", proposta );
+                    return Created("/api/PessoaJuridica", proposta);
                 }
                 catch (Exception ex)
                 {
