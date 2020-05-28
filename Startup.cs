@@ -26,20 +26,31 @@ namespace faceitapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://example.com",
+                                                          "http://www.contoso.com");
+                                  });
+            });
+
+
             services.AddDbContext<faceitContext>(options => options.UseSqlServer(Configuration.GetConnectionString("dbsomee")));
 
             services.AddControllers()
                 .AddNewtonsoftJson(options =>
                 {
-                    //Configurações para o JSON não dar loop e ignorar nulos
+                    //ConfiguraÃ§Ãµes para o JSON nÃ£o dar loop e ignorar nulos
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
 
-            //Configurações simples do swagger
+            //ConfiguraÃ§Ãµes simples do swagger
             services.AddSwaggerGen(s => s.SwaggerDoc("doc", new OpenApiInfo { Title = "FaceIT - API " }));
 
-            //Configurações do JWT
+            //ConfiguraÃ§Ãµes do JWT
             var securityKey = Encoding.ASCII.GetBytes(Configuration["Jwt:Key"]);
 
             services.AddAuthentication(a =>
@@ -60,15 +71,6 @@ namespace faceitapi
                     };
                 });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  builder =>
-                                  {
-                                      builder.WithOrigins("http://example.com",
-                                                          "http://www.contoso.com");
-                                  });
-            });
 
         }
 
@@ -79,6 +81,12 @@ namespace faceitapi
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+                );
 
             #region Chamadas do Swagger
 
@@ -105,11 +113,6 @@ namespace faceitapi
                 endpoints.MapControllers();
             });
 
-            app.UseCors(x => x
-            .AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-                );
         }
     }
 }
