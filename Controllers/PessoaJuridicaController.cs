@@ -99,11 +99,11 @@ namespace faceitapi.Controllers
                     {
                         await faceitContext.PessoaSkill.AddRangeAsync(model.IDPessoaNavigation.PessoaSkill);
                     }
-                    if (model.IDPessoaNavigation.Imagem.Bytes != null)
+                    if (model.IDPessoaNavigation.Imagem != null)
                     {
                         await faceitContext.Imagem.AddAsync(model.IDPessoaNavigation.Imagem);
                     }
-                    if (model.IDPessoaNavigation.Anexo.Bytes != null)
+                    if (model.IDPessoaNavigation.Anexo != null)
                     {
                         await faceitContext.Anexo.AddAsync(model.IDPessoaNavigation.Anexo);
                     }
@@ -146,7 +146,7 @@ namespace faceitapi.Controllers
                     faceitContext.Endereco.Update(model.IDPessoaNavigation.Endereco);
                     faceitContext.PessoaSkill.UpdateRange(model.IDPessoaNavigation.PessoaSkill);
 
-                    if (model.IDPessoaNavigation.Imagem.Bytes != null)
+                    if (model.IDPessoaNavigation.Imagem != null)
                     {
                         try
                         {
@@ -158,7 +158,7 @@ namespace faceitapi.Controllers
                         }
                     }
 
-                    if (model.IDPessoaNavigation.Anexo.Bytes != null)
+                    if (model.IDPessoaNavigation.Anexo != null)
                     {
                         try
                         {
