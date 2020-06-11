@@ -92,6 +92,7 @@ namespace faceitapi.Controllers
                 {
                     model.IDPessoaNavigation.Excluido = false;
                     model.IDPessoaNavigation.Tipo = "PJ";
+                    model.IDPessoaNavigation.Role = "user";
                     await faceitContext.Pessoa.AddAsync(model.IDPessoaNavigation);
                     await faceitContext.PessoaJuridica.AddAsync(model);
                     await faceitContext.Endereco.AddAsync(model.IDPessoaNavigation.Endereco);
@@ -122,7 +123,6 @@ namespace faceitapi.Controllers
             {
                 return BadRequest(ModelState);
             }
-
         }
 
         /// <summary>
@@ -169,7 +169,6 @@ namespace faceitapi.Controllers
                             await faceitContext.Anexo.AddAsync(model.IDPessoaNavigation.Anexo);
                         }
                     }
-
 
                     await faceitContext.SaveChangesAsync();
 

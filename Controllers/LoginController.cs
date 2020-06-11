@@ -106,7 +106,5 @@ namespace faceitapi.Controllers
 
             return tokenHandler.WriteToken(token);
         }
-
-
     }
 }

@@ -7,12 +7,14 @@ namespace faceitapi.Models
     {
         [Key]
         public int IDProposta { get; set; }
+
         [Key]
         public int IDPessoa { get; set; }
 
         [ForeignKey(nameof(IDPessoa))]
         [InverseProperty(nameof(Pessoa.Candidato))]
         public virtual Pessoa IDPessoaNavigation { get; set; }
+
         [ForeignKey(nameof(IDProposta))]
         [InverseProperty(nameof(Proposta.Candidato))]
         public virtual Proposta IDPropostaNavigation { get; set; }

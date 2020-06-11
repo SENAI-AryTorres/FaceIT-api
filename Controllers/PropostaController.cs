@@ -44,7 +44,6 @@ namespace faceitapi.Controllers
             }
         }
 
-
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -152,6 +151,5 @@ namespace faceitapi.Controllers
                 return BadRequest(ModelState);
             }
         }
-
     }
 }

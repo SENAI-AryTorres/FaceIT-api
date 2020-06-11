@@ -12,5 +12,4 @@
         public Pessoa pessoa { get; set; }
         public Token token { get; set; }
     }
-
 }

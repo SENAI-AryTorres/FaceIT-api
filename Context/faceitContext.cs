@@ -5,7 +5,6 @@ namespace faceitapi.Context
 {
     public partial class faceitContext : DbContext
     {
-
         public faceitContext(DbContextOptions<faceitContext> options)
             : base(options)
         {

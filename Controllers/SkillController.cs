@@ -17,6 +17,7 @@ namespace faceitapi.Controllers
         {
             faceitContext = context;
         }
+
         //Só um commit de teste na master
 
         [HttpGet]

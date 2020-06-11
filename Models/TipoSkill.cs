@@ -13,6 +13,7 @@ namespace faceitapi.Models
 
         [Key]
         public int IDTipoSkill { get; set; }
+
         [Required]
         [StringLength(50)]
         public string Descricao { get; set; }

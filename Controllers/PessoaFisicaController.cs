@@ -39,7 +39,6 @@ namespace faceitapi.Controllers
             return Ok(data);
         }
 
-
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -84,6 +83,7 @@ namespace faceitapi.Controllers
                 {
                     model.IDPessoaNavigation.Excluido = false;
                     model.IDPessoaNavigation.Tipo = "PF";
+                    model.IDPessoaNavigation.Role = "user";
                     await faceitContext.Pessoa.AddAsync(model.IDPessoaNavigation);
                     await faceitContext.PessoaFisica.AddAsync(model);
                     await faceitContext.Endereco.AddAsync(model.IDPessoaNavigation.Endereco);

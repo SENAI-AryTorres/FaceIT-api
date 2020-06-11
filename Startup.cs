@@ -16,7 +16,7 @@ namespace faceitapi
     public class Startup
     {
         public IConfiguration Configuration { get; }
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -35,7 +35,6 @@ namespace faceitapi
                                                           "http://www.contoso.com");
                                   });
             });
-
 
             services.AddDbContext<faceitContext>(options => options.UseSqlServer(Configuration.GetConnectionString("dbsomee")));
 
@@ -70,8 +69,6 @@ namespace faceitapi
                         ValidateAudience = false
                     };
                 });
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,7 +78,7 @@ namespace faceitapi
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseCors(x => x
             .AllowAnyOrigin()
             .AllowAnyMethod()
@@ -98,7 +95,7 @@ namespace faceitapi
                 c.RoutePrefix = string.Empty;
             });
 
-            #endregion
+            #endregion Chamadas do Swagger
 
             app.UseHttpsRedirection();
 
@@ -112,7 +109,6 @@ namespace faceitapi
             {
                 endpoints.MapControllers();
             });
-
         }
     }
 }

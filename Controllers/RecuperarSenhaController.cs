@@ -100,6 +100,5 @@ namespace faceitapi.Controllers
                 smtp.Send(mail);
             }
         }
-
     }
 }
