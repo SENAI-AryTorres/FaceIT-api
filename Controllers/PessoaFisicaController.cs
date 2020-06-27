@@ -75,6 +75,7 @@ namespace faceitapi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
         public async Task<IActionResult> Insert([FromBody] PessoaFisica model)
         {
             if (ModelState.IsValid)

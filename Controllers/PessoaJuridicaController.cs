@@ -84,6 +84,7 @@ namespace faceitapi.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [AllowAnonymous]
         public async Task<IActionResult> Insert([FromBody] PessoaJuridica model)
         {
             if (ModelState.IsValid)

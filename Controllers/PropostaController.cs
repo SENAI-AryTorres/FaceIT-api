@@ -32,7 +32,7 @@ namespace faceitapi.Controllers
                 var data = await faceitContext
                     .Proposta
                     .Include(x => x.PropostaSkill)
-                    .Where(x => x.Encerrada == false)
+                    .Where(x => x.Encerrada.GetValueOrDefault().Equals(false))
                     .ToListAsync();
 
                 return Ok(data);
@@ -56,7 +56,7 @@ namespace faceitapi.Controllers
                 var data = await faceitContext
                     .Proposta
                     .Include(x => x.PropostaSkill)
-                    .Where(x => x.Encerrada == false && x.IDEmpresa.Equals(idEmpresa))
+                    .Where(x => x.Encerrada.GetValueOrDefault().Equals(false) && x.IDEmpresa.Equals(idEmpresa))
                     .ToListAsync();
 
                 return Ok(data);
@@ -79,7 +79,7 @@ namespace faceitapi.Controllers
                 var data = await faceitContext
                     .Proposta
                     .Include(x => x.PropostaSkill)
-                    .Where(x => x.Encerrada == false && x.IDProposta == idProposta)
+                    .Where(x => x.Encerrada.GetValueOrDefault().Equals(false) && x.IDProposta.Equals(idProposta))
                     .ToListAsync();
 
                 return Ok(data);
@@ -102,6 +102,7 @@ namespace faceitapi.Controllers
                 try
                 {
                     proposta.Encerrada = false;
+                    proposta.IDProposta = await MaxID() + 1;
                     await faceitContext.Proposta.AddAsync(proposta);
                     await faceitContext.PropostaSkill.AddRangeAsync(proposta.PropostaSkill);
                     await faceitContext.SaveChangesAsync();
@@ -128,6 +129,7 @@ namespace faceitapi.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize]
         public async Task<IActionResult> EditOrDelete([FromBody] Proposta proposta)
         {
             if (ModelState.IsValid)
@@ -150,6 +152,13 @@ namespace faceitapi.Controllers
             {
                 return BadRequest(ModelState);
             }
+        }
+
+        private async Task<int> MaxID()
+        {
+            return await faceitContext
+                .Proposta
+                .MaxAsync(x => (int?)x.IDProposta) ?? 0;
         }
     }
 }
