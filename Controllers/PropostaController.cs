@@ -47,7 +47,7 @@ namespace faceitapi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Route("PropostasEmpresa")]
+        [Route("PropostasEmpresa/{idEmpresa}")]
         [Authorize]
         public async Task<IActionResult> GetAllByCompany(int idEmpresa)
         {
