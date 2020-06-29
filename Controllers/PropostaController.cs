@@ -68,7 +68,7 @@ namespace faceitapi.Controllers
             }
         }
 
-        [HttpGet("{idPropsota}")]
+        [HttpGet("{idProposta}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [Authorize]
