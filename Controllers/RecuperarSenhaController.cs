@@ -75,7 +75,7 @@ namespace faceitapi.Controllers
 
             StringBuilder body = new StringBuilder();
             body.AppendLine("Olá, você socilitou alteração de senha.");
-            body.AppendLine($"Para acessar o aplicativo, use seu e-mail e a senha {guid}.");
+            body.AppendLine($"Para acessar o aplicativo, use seu e-mail e a senha: {guid}");
             body.AppendLine("Após o login, poderá alterar sua senha pela edição de perfil.");
 
             mail.From = new MailAddress("faceitapisenaiarytorres@gmail.com");//de
