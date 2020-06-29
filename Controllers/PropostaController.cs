@@ -32,7 +32,7 @@ namespace faceitapi.Controllers
                 var data = await faceitContext
                     .Proposta
                     .Include(x => x.PropostaSkill)
-                    .Where(x => x.Encerrada.GetValueOrDefault().Equals(false))
+                    .Where(x => x.Encerrada != true)
                     .ToListAsync();
 
                 return Ok(data);
@@ -56,7 +56,7 @@ namespace faceitapi.Controllers
                 var data = await faceitContext
                     .Proposta
                     .Include(x => x.PropostaSkill)
-                    .Where(x => x.Encerrada.GetValueOrDefault().Equals(false) && x.IDEmpresa.Equals(idEmpresa))
+                    .Where(x => x.Encerrada != true && x.IDEmpresa.Equals(idEmpresa))
                     .ToListAsync();
 
                 return Ok(data);
@@ -79,7 +79,7 @@ namespace faceitapi.Controllers
                 var data = await faceitContext
                     .Proposta
                     .Include(x => x.PropostaSkill)
-                    .Where(x => x.Encerrada.GetValueOrDefault().Equals(false) && x.IDProposta.Equals(idProposta))
+                    .Where(x => x.Encerrada != true && x.IDProposta.Equals(idProposta))
                     .ToListAsync();
 
                 return Ok(data);
