@@ -20,18 +20,45 @@ namespace faceitapi.Controllers
         {
             faceitContext = context;
         }
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var data = await faceitContext.Candidato
+                    .ToListAsync();
+
+                if (data.Count > 0)
+                {
+                    return Ok(data);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
+            }
+        }
 
         [HttpGet("{idProposta}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Authorize]
-        public async Task<IActionResult> GetAll(int idProposta)
+        public async Task<IActionResult> GetCandidatoByProposta(int idProposta)
         {
             try
             {
                 var data = await faceitContext.Candidato
-                    .Where(x => x.IDPessoa == idProposta)
+                    .Where(x => x.IDProposta == idProposta)
                     .ToListAsync();
 
                 if (data.Count > 0)
