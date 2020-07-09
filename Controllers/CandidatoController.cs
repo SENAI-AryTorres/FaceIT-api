@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace faceitapi.Controllers
@@ -14,12 +18,16 @@ namespace faceitapi.Controllers
     [ApiController]
     public class CandidatoController : ControllerBase
     {
-        private readonly faceitContext faceitContext;
+        private readonly faceitContext _faceitContext;
+        private readonly IConfiguration _configuration;
 
-        public CandidatoController(faceitContext context)
+        public CandidatoController(faceitContext faceitContext, IConfiguration configuration)
+
         {
-            faceitContext = context;
+            _faceitContext = faceitContext;
+            _configuration = configuration;
         }
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -29,7 +37,7 @@ namespace faceitapi.Controllers
         {
             try
             {
-                var data = await faceitContext.Candidato
+                var data = await _faceitContext.Candidato
                     .ToListAsync();
 
                 if (data.Count > 0)
@@ -57,7 +65,7 @@ namespace faceitapi.Controllers
         {
             try
             {
-                var data = await faceitContext.Candidato
+                var data = await _faceitContext.Candidato
                     .Where(x => x.IDProposta == idProposta)
                     .ToListAsync();
 
@@ -85,8 +93,9 @@ namespace faceitapi.Controllers
         {
             try
             {
-                await faceitContext.Candidato.AddAsync(candidato);
-                await faceitContext.SaveChangesAsync();
+                await _faceitContext.Candidato.AddAsync(candidato);
+                await _faceitContext.SaveChangesAsync();
+                EnviarEmailNovoCandidato(candidato);
 
                 return Created("api/Candidato", candidato);
             }
@@ -105,8 +114,8 @@ namespace faceitapi.Controllers
         {
             try
             {
-                faceitContext.Candidato.Remove(candidato);
-                await faceitContext.SaveChangesAsync();
+                _faceitContext.Candidato.Remove(candidato);
+                await _faceitContext.SaveChangesAsync();
 
                 return Accepted();
             }
@@ -115,6 +124,57 @@ namespace faceitapi.Controllers
                 ModelState.AddModelError(ex.Message, "Contate um administrador");
                 return BadRequest(ModelState);
             }
+        }
+
+        private void EnviarEmailNovoCandidato(Candidato candidato)
+        {
+            MailMessage mail = new MailMessage();
+
+            StringBuilder body = new StringBuilder();
+            body.AppendLine($"Olá!");
+            body.AppendLine($"Estamos entrando em contato para informar que {ObterNomeCandidato(candidato.IDPessoa)} acabou de se candidatar a uma oferta de que você está oferecendo.");
+            body.AppendLine("Para mais detalhes acesse o aplicativo WEB ou mobile.");
+            body.AppendLine("Atenciosamente equipe FaceIT.");
+
+            mail.From = new MailAddress("faceitapisenaiarytorres@gmail.com");//de
+            mail.To.Add(ObterEmailEempresa(candidato.IDProposta)); // para
+            mail.Subject = "Novo candidato"; // assunto
+            mail.Body = body.ToString(); // mensagem
+
+            // em caso de anexos
+            //mail.Attachments.Add(new Attachment(@"C:\teste.txt"));
+
+            using (var smtp = new SmtpClient("smtp.gmail.com"))
+            {
+                smtp.EnableSsl = true; // GMail requer SSL
+                smtp.Port = 587;       // porta para SSL
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network; // modo de envio
+                smtp.UseDefaultCredentials = false; // vamos utilizar credencias especificas
+
+                // seu usuário e senha para autenticação
+                smtp.Credentials = new NetworkCredential(_configuration["Email:email"], _configuration["Email:senha"]);
+
+                // envia o e-mail
+                smtp.Send(mail);
+            }
+        }
+
+        private string ObterEmailEempresa(int idProdosta)
+        {
+            return _faceitContext.Proposta
+                .Include(x => x.IDEmpresaNavigation)
+                .FirstOrDefault(x => x.IDProposta.Equals(idProdosta))
+                .IDEmpresaNavigation.Email;
+        }
+
+        private string ObterNomeCandidato(int idPessoa)
+        {
+            var pessoa = _faceitContext.Pessoa
+                .Include(x => x.PessoaFisica)
+                .Include(x => x.PessoaJuridica)
+                .FirstOrDefault(x => x.IDPessoa.Equals(idPessoa));
+
+            return pessoa.PessoaFisica?.Nome ?? pessoa.PessoaJuridica.RazaoSocial;
         }
     }
 }

@@ -17,13 +17,13 @@ namespace faceitapi.Controllers
     [ApiController]
     public class RecuperarSenhaController : ControllerBase
     {
-        private readonly faceitContext faceitContext;
-        private readonly IConfiguration config;
+        private readonly faceitContext _faceitContext;
+        private readonly IConfiguration _configuration;
 
-        public RecuperarSenhaController(IConfiguration configuration, faceitContext context)
+        public RecuperarSenhaController(faceitContext context, IConfiguration configuration)
         {
-            faceitContext = context;
-            config = configuration;
+            _faceitContext = context;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -32,19 +32,19 @@ namespace faceitapi.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ObterNovaSenha([FromBody] string email)
         {
-            if (faceitContext.Pessoa.Any(x => x.Email.Equals(email)))
+            if (_faceitContext.Pessoa.Any(x => x.Email.Equals(email)))
             {
                 try
                 {
-                    var pessoa = await faceitContext.Pessoa.FirstOrDefaultAsync(x => x.Email.Equals(email));
+                    var pessoa = await _faceitContext.Pessoa.FirstOrDefaultAsync(x => x.Email.Equals(email));
                     Guid guid = Guid.NewGuid();
 
                     TrocarSenha(pessoa, guid.ToString());
-                    SendEmail(pessoa, guid.ToString());
+                    EnviarEmailRecuperarSenha(pessoa, guid.ToString());
 
                     return Ok();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return StatusCode(500);
                 }
@@ -60,8 +60,8 @@ namespace faceitapi.Controllers
             try
             {
                 pessoa.Senha = senha;
-                faceitContext.Pessoa.Update(pessoa);
-                await faceitContext.SaveChangesAsync();
+                _faceitContext.Pessoa.Update(pessoa);
+                await _faceitContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -69,12 +69,12 @@ namespace faceitapi.Controllers
             }
         }
 
-        private void SendEmail(Pessoa pessoa, string guid)
+        private void EnviarEmailRecuperarSenha(Pessoa pessoa, string guid)
         {
             MailMessage mail = new MailMessage();
 
             StringBuilder body = new StringBuilder();
-            body.AppendLine("Olá, você socilitou alteração de senha.");
+            body.AppendLine("Olá, você solicitou alteração de senha.");
             body.AppendLine($"Para acessar o aplicativo, use seu e-mail e a senha: {guid}");
             body.AppendLine("Após o login, poderá alterar sua senha pela edição de perfil.");
 
@@ -94,7 +94,7 @@ namespace faceitapi.Controllers
                 smtp.UseDefaultCredentials = false; // vamos utilizar credencias especificas
 
                 // seu usuário e senha para autenticação
-                smtp.Credentials = new NetworkCredential(config["Email:email"], config["Email:senha"]);
+                smtp.Credentials = new NetworkCredential(_configuration["Email:email"], _configuration["Email:senha"]);
 
                 // envia o e-mail
                 smtp.Send(mail);
