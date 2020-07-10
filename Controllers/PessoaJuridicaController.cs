@@ -142,10 +142,14 @@ namespace faceitapi.Controllers
             {
                 try
                 {
+                    var skillAux = await faceitContext.PessoaSkill.Where(x => x.IDPessoa.Equals(model.IDPessoa)).ToListAsync();
+                    faceitContext.PessoaSkill.RemoveRange(skillAux);
+                    await faceitContext.SaveChangesAsync();
+
                     faceitContext.Pessoa.Update(model.IDPessoaNavigation);
                     faceitContext.PessoaJuridica.Update(model);
                     faceitContext.Endereco.Update(model.IDPessoaNavigation.Endereco);
-                    faceitContext.PessoaSkill.UpdateRange(model.IDPessoaNavigation.PessoaSkill);
+                    await faceitContext.PessoaSkill.AddRangeAsync(model.IDPessoaNavigation.PessoaSkill);
 
                     if (model.IDPessoaNavigation.Imagem != null)
                     {

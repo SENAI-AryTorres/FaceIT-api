@@ -136,8 +136,12 @@ namespace faceitapi.Controllers
             {
                 try
                 {
+                    var skillAux = await faceitContext.PropostaSkill.Where(x => x.IDProposta.Equals(proposta.IDProposta)).ToListAsync();
+                    faceitContext.PropostaSkill.RemoveRange(skillAux);
+                    await faceitContext.SaveChangesAsync();
+
                     faceitContext.Proposta.Update(proposta);
-                    faceitContext.PropostaSkill.UpdateRange(proposta.PropostaSkill);
+                    await faceitContext.PropostaSkill.AddRangeAsync(proposta.PropostaSkill);
                     await faceitContext.SaveChangesAsync();
 
                     return Accepted(proposta);
