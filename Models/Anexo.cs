@@ -11,7 +11,6 @@ namespace faceitapi.Models
         [StringLength(150)]
         public string Nome { get; set; }
 
-        [Required]
         public byte[] Bytes { get; set; }
 
         [ForeignKey(nameof(IDPessoa))]
