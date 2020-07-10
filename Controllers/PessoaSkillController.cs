@@ -13,7 +13,7 @@ namespace faceitapi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "adm")]
+    [Authorize]
     public class PessoaSkillController : ControllerBase
     {
         private readonly faceitContext faceitContext;
