@@ -93,11 +93,11 @@ namespace faceitapi.Controllers
                     {
                         await faceitContext.PessoaSkill.AddRangeAsync(model.IDPessoaNavigation.PessoaSkill);
                     }
-                    if (model.IDPessoaNavigation.Imagem.Bytes != null)
+                    if (model.IDPessoaNavigation.Imagem != null)
                     {
                         await faceitContext.Imagem.AddAsync(model.IDPessoaNavigation.Imagem);
                     }
-                    if (model.IDPessoaNavigation.Anexo.Bytes != null)
+                    if (model.IDPessoaNavigation.Anexo != null)
                     {
                         await faceitContext.Anexo.AddAsync(model.IDPessoaNavigation.Anexo);
                     }
