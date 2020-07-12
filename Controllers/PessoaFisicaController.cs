@@ -137,10 +137,10 @@ namespace faceitapi.Controllers
                     faceitContext.PessoaSkill.RemoveRange(skillAux);
                     await faceitContext.SaveChangesAsync();
 
+                    await faceitContext.PessoaSkill.AddRangeAsync(model.IDPessoaNavigation.PessoaSkill);
                     faceitContext.Pessoa.Update(model.IDPessoaNavigation);
                     faceitContext.PessoaFisica.Update(model);
                     faceitContext.Endereco.Update(model.IDPessoaNavigation.Endereco);
-                    await faceitContext.PessoaSkill.AddRangeAsync(model.IDPessoaNavigation.PessoaSkill);
 
                     if (model.IDPessoaNavigation.Imagem != null)
                     {
