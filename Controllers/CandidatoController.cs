@@ -85,6 +85,37 @@ namespace faceitapi.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("Propostas/{idPessoa}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize]
+        public async Task<IActionResult> ObterPropostasCandidatadas(int idPessoa)
+        {
+            try
+            {
+                var data = await _faceitContext.Proposta
+                    .Include(x => x.Candidato)
+                    .Where(x => x.Candidato.Any(y => y.IDPessoa == idPessoa))
+                    .ToListAsync();
+
+                if (data.Count > 0)
+                {
+                    return Ok(data);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(ex.Message, "Contate um administrador");
+                return BadRequest(ModelState);
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status202Accepted)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
